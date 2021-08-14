@@ -1,0 +1,62 @@
+@import url("https://fonts.googleapis.com/css2?family=Barlow:wght@100;300;400&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#app {
+  @apply bg-gray-900 rounded-lg shadow-sm flex flex-col h-screen overflow-hidden text-gray-500 relative;
+  font-family: "Barlow", sans serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar rail styles */
+.ps .ps__rail-x:hover,
+.ps .ps__rail-y:hover,
+.ps .ps__rail-x:focus,
+.ps .ps__rail-y:focus,
+.ps .ps__rail-x.ps--clicking,
+.ps .ps__rail-y.ps--clicking {
+  background-color: transparent;
+}
+
+/* Scrollbar thumb styles */
+.ps__thumb-x,
+.ps__thumb-y {
+  background-color: #4b5563;
+}
+
+/* Hover state  */
+.ps__rail-x:hover > .ps__thumb-x,
+.ps__rail-x:focus > .ps__thumb-x,
+.ps__rail-x.ps--clicking .ps__thumb-x,
+.ps__rail-y:hover > .ps__thumb-y,
+.ps__rail-y:focus > .ps__thumb-y,
+.ps__rail-y.ps--clicking .ps__thumb-y {
+  background-color: #6b7280;
+}
+/* End scrollbar  */
+
+.loader {
+  border-top-color: #337aaa;
+  -webkit-animation: spinner 2s linear infinite;
+  animation: spinner 2s linear infinite;
+}
+
+@-webkit-keyframes spinner {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
