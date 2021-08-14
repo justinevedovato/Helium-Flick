@@ -5,7 +5,7 @@ const path = require("path")
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: process.env.ELECTRON == "true" ? "./" : ".",
+  base: "./",
   plugins: [Vue(), Pages()],
   resolve: {
     alias: {
