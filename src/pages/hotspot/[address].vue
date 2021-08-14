@@ -68,7 +68,7 @@
               <p>{{ hotspot.lastUpdated }}</p>
               <img
                 @click="reload"
-                src="../assets/refresh.svg"
+                src="/src/assets/refresh.svg"
                 alt="Refresh"
                 class="ml-2 h-5 opacity-40 hover:opacity-70 cursor-pointer"
               />
@@ -189,13 +189,14 @@
 
 <script>
 import animalHash from "angry-purple-tiger"
-import Activity from "../components/Activity.vue"
-import MonthlyChart from "../components/MonthlyChart.vue"
+import Activity from "~/components/Activity.vue"
+import MonthlyChart from "~/components/MonthlyChart.vue"
 import prettyms from "pretty-ms"
-import LoadingDots from "../components/LoadingDots.vue"
+import LoadingDots from "~/components/LoadingDots.vue"
 
 export default {
   components: { Activity, MonthlyChart, LoadingDots },
+  props: ["address"],
   data() {
     return {
       hotspot: {
@@ -210,7 +211,6 @@ export default {
       },
       activity: [],
       activity2: {},
-      address: "",
       loaded: false,
       dropdownOpen: true,
       timestampAdded: "",
@@ -226,11 +226,6 @@ export default {
     },
   },
   methods: {
-    getParams() {
-      const params = new URL(document.location).searchParams
-      this.address = params.get("id")
-    },
-
     async getHotspotInfos(address) {
       const res = await fetch("https://api.helium.io/v1/hotspots/" + address)
       let { data } = await res.json()
@@ -366,7 +361,6 @@ export default {
   async created() {
     this.timer = setInterval(this.updateData, 600000)
 
-    await this.getParams()
     await this.updateData()
 
     this.loaded = true

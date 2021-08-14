@@ -27,7 +27,7 @@
         />
       </div>
       <div v-else class="flex flex-col">
-        <p class="text-center my-10">No hotspots yet</p>
+        <p class="text-center mt-10 mb-12">No hotspots yet</p>
         <router-link
           to="/settings"
           class="

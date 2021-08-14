@@ -7,4 +7,9 @@ const path = require("path")
 export default defineConfig({
   base: process.env.ELECTRON == "true" ? "./" : ".",
   plugins: [Vue(), Pages()],
+  resolve: {
+    alias: {
+      "~/": `${path.resolve(__dirname, "src")}/`,
+    },
+  },
 })

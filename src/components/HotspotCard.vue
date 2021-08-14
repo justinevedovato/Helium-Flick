@@ -119,7 +119,7 @@ export default {
 
   computed: {
     link() {
-      return "/hotspot/?id=" + this.item
+      return "/hotspot/" + this.item
     },
     name() {
       let n = animalHash(this.item)
