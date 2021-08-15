@@ -39,14 +39,13 @@ You might not want to load their Explorer everytime you want to check how your h
 
 ## Development
 
-
-Feel free to clone the repository if you find any interest of running this application locally.
+Feel free to clone the repository if you find any interest in running this application locally.
 
 Once you clone it, make sure to install all the dependencies from the root folder: `npm i`
 
-Then, to run the development version: `npm run electron:dev`, this is gonna run Vue and Electron at the same time.
+If you want to run the development version: `npm run electron:dev`, this is gonna run Vue and Electron at the same time.
 
-Once you're done, you can build: `npm run app:build` (Works for Windows so far)
+To build the application: `npm run app:build` (Works only for Windows so far)
 
 You will find your .exe file under the `dist_electron` folder.
 
