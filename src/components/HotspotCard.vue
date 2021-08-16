@@ -7,31 +7,31 @@
 
   <div>
     <router-link :to="link" class="flex">
-      <div class="flex w-full hover:bg-gray-800 mx-2 rounded-lg h-16">
-        <div class="flex flex-1 flex-col px-3 pt-1 pb-3">
+      <div
+        class="flex w-full hover:bg-gray-800 mx-2 rounded-lg h-16 items-center"
+      >
+        <div class="flex flex-1 flex-col px-3">
           <div class="flex items-baseline">
             <p class="text-white inline">{{ name }}</p>
-            <div class="inline mt-1 ml-1">
-              <span v-if="status == 'online'">
-                <span class="text-green-600 text-lg leading-6 ml-1">●</span>
-              </span>
-              <span v-if="status == 'syncing'">
-                <span
-                  class="text-yellow-500 text-lg leading-6 ml-1 animate-pulse"
-                  >●</span
-                >
-              </span>
-              <span v-if="status == 'offline'">
-                <span class="text-red-700 text-lg leading-6 ml-1"> ● </span>
-              </span>
-              <span v-if="relayed">
-                <span class="text-yellow-700 text-lg leading-6 ml-1"> ● </span>
-              </span>
-              <!-- Bullet placeholder during loading: -->
-              <span v-if="!loaded" class="text-transparent text-lg leading-6"
+            <Tooltip inline class="ml-2">
+              <span
+                :class="{
+                  'text-green-600': status == 'online',
+                  'text-yellow-500 animate-pulse': status == 'syncing',
+                  'text-red-700': status == 'offline',
+                }"
                 >●</span
               >
-            </div>
+              <template #tooltip>
+                <span class="capitalize">{{ status }}</span>
+              </template>
+            </Tooltip>
+            <Tooltip inline v-if="relayed" class="ml-1.5">
+              <span class="text-yellow-700">●</span>
+              <template #tooltip>Relayed</template>
+            </Tooltip>
+            <!-- Bullet placeholder during loading: -->
+            <span v-if="!loaded" class="text-transparent text-lg">●</span>
           </div>
 
           <div class="flex w-full items-center mt-0.5">
@@ -100,8 +100,10 @@
 
 <script>
 import animalHash from "angry-purple-tiger"
+import Tooltip from "./Tooltip.vue"
 
 export default {
+  components: { Tooltip },
   props: ["item"],
   data() {
     return {
@@ -229,3 +231,5 @@ export default {
   },
 }
 </script>
+
+<style lang="postcss" scoped></style>

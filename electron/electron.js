@@ -81,6 +81,10 @@ app.whenReady().then(() => {
   tray.setContextMenu(contextMenu)
   createWindow()
 
+  app.on("minimize", () => {
+    win.hide()
+  })
+
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow()
@@ -90,6 +94,7 @@ app.whenReady().then(() => {
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
+    tray.destroy()
     app.quit()
   }
 })

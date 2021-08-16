@@ -5,3 +5,4 @@ dist_electron
 dist-ssr
 *.local
 out/
+todo.todo
