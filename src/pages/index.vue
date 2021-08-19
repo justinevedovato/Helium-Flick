@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col space-y-0.5 flex-1 overflow-y-hidden relative">
-    <h1 class="uppercase text-gray-300 text-center py-2 inline">My Hotspots</h1>
+    <h1 class="uppercase text-gray-300 text-center my-2">My Hotspots</h1>
 
     <div class="absolute right-1 top-2 items-center flex">
       <Tooltip inline dir="left" class="mr-1.5">

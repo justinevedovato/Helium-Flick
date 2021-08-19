@@ -2,7 +2,7 @@
   <div class="h-screen flex flex-col relative overflow-y-hidden">
     <!-- Header -->
     <div class="flex-1 flex flex-col h-screen w-full absolute">
-      <div class="flex pb-2 px-3 pt-3">
+      <div class="flex pb-1.5 p-3">
         <img
           alt="Vue logo"
           src="https://cryptologos.cc/logos/helium-hnt-logo.svg"
@@ -17,30 +17,49 @@
           "
         />
         <div class="text-center flex-1 mb-2">
-          <div>
-            <h1 class="text-white text-lg inline font-thin">
-              {{ name }}
+          <div
+            class="
+              inline
+              hover:bg-black hover:bg-opacity-20
+              px-2
+              rounded-md
+              pt-1
+              pb-1.5
+            "
+          >
+            <h1 class="text-white text-lg inline font-thin leading-6">
+              <a
+                href="#"
+                @click.prevent="
+                  openExternalUrl(
+                    'https://explorer.helium.com/hotspots/' + address
+                  )
+                "
+              >
+                {{ name }}
+              </a>
             </h1>
 
-            <div class="inline overflow-hidden mt-1 ml-1.5">
-              <span v-if="hotspot.status == 'online'">
-                <span class="text-green-600 text-xl ml-1">●</span>
-              </span>
-              <span v-if="hotspot.status == 'syncing'">
-                <span class="text-yellow-500 text-xl ml-1 animate-pulse"
-                  >●</span
-                >
-              </span>
-              <span v-if="hotspot.status == 'offline'">
-                <span class="text-red-700 text-xl ml-1">●</span>
-              </span>
-              <span v-if="hotspot.relayed">
-                <span class="text-yellow-700 text-xl ml-1">●</span>
-              </span>
-            </div>
+            <Tooltip inline dir="bottom" class="ml-2">
+              <span
+                :class="{
+                  'text-green-600': hotspot.status == 'online',
+                  'text-yellow-500 animate-pulse': hotspot.status == 'syncing',
+                  'text-red-700': hotspot.status == 'offline',
+                }"
+                >●</span
+              >
+              <template #tooltip>
+                <span class="capitalize">{{ hotspot.status }}</span>
+              </template>
+            </Tooltip>
+            <Tooltip inline dir="bottom" v-if="hotspot.relayed" class="ml-1.5">
+              <span class="text-yellow-700">●</span>
+              <template #tooltip>Relayed</template>
+            </Tooltip>
           </div>
 
-          <div class="flex flex-col text-white mt-1 -mb-1.5">
+          <div class="flex flex-col text-white mt-2.5">
             <span
               class="
                 text-indigo-300 text-xl
@@ -65,22 +84,20 @@
               "
             >
               <LoadingDots v-if="!hotspot.lastUpdated" class="self-center" />
-              <p>{{ hotspot.lastUpdated }}</p>
-              <img
-                @click="reload"
-                src="/src/assets/refresh.svg"
-                alt="Refresh"
-                class="ml-2 h-5 opacity-40 hover:opacity-70 cursor-pointer"
-              />
+              <p class="mr-2">{{ hotspot.lastUpdated }}</p>
+              <Tooltip inline dir="left">
+                <img
+                  @click="reload"
+                  src="/src/assets/refresh.svg"
+                  alt="Refresh"
+                  class="h-5 opacity-40 hover:opacity-70 cursor-pointer"
+                />
+                <template #tooltip>Reload</template></Tooltip
+              >
             </div>
           </div>
         </div>
       </div>
-
-      <!-- If no activities: -->
-      <p v-if="!hotspot.lastUpdated && loaded" class="text-center mt-10">
-        No activity
-      </p>
 
       <!-- Activity feed:  -->
       <perfect-scrollbar class="list flex-1 px-2 pb-3">
@@ -126,9 +143,58 @@
             </p>
           </div>
         </div>
+        <!-- If no activities: -->
+        <p v-if="!hotspot.lastUpdated && loaded" class="text-center mt-10">
+          No activity
+        </p>
+
+        <div v-else v-for="(group, date) of activity2" :key="date">
+          <h2
+            @click="toggleDay(date)"
+            class="text-gray-200 my-1 py-0.5 cursor-pointer"
+            :class="{
+              'bg-gray-800 rounded-md  bg-opacity-50':
+                daysClosed.includes(date),
+            }"
+          >
+            <span
+              v-if="!daysClosed.includes(date)"
+              class="text-gray-700 text-customxs mx-1 cursor-pointer"
+              >▼</span
+            >
+            <span v-else class="text-gray-700 text-customxs mx-1 cursor-pointer"
+              >►</span
+            >
+
+            {{ date }}
+          </h2>
+          <!-- <transition-group
+            appear
+            v-if="group.opened"
+            tag="div"
+            name="slide-in"
+            :style="{ '--total': group.items }"
+          > -->
+          <div
+            v-if="!daysClosed.includes(date)"
+            :class="{
+              'border-l-2 border-gray-800 border-opacity-50':
+                !daysClosed.includes(date),
+            }"
+          >
+            <Activity
+              v-for="(item, index) of group.items"
+              :key="index"
+              :item="item"
+              :address="address"
+              :style="{ '--i': index }"
+            />
+          </div>
+          <!-- </transition-group> -->
+        </div>
 
         <!-- Spinner -->
-        <div v-if="!loaded" class="flex justify-center mt-10">
+        <div v-if="!loaded" class="flex justify-center mt-10 mb-12">
           <div
             class="
               loader
@@ -141,46 +207,33 @@
           ></div>
         </div>
 
-        <div v-else v-for="(group, date) of activity2" :key="date">
-          <h2
-            @click="group.opened = !group.opened"
-            class="text-gray-200 my-1 py-0.5 cursor-pointer"
-            :class="{
-              'bg-gray-800 rounded-md  bg-opacity-50': !group.opened,
-            }"
-          >
-            <span
-              v-if="group.opened"
-              class="text-gray-700 text-customxs mx-1 cursor-pointer"
-              >▼</span
-            >
-            <span v-else class="text-gray-700 text-customxs mx-1 cursor-pointer"
-              >►</span
-            >
+        <!-- Load More button  -->
+        <div
+          v-if="loaded && nextCursor"
+          @click="loadMoreActivity"
+          class="
+            mx-auto
+            w-24
+            px-3
+            py-2
+            text-center
+            rounded-md
+            bg-black bg-opacity-30
+            hover:bg-opacity-50
+            cursor-pointer
+            mt-7
+            mb-12
+            text-sm
+          "
+        >
+          Load more
+        </div>
 
-            {{ date }}
-          </h2>
-          <transition-group
-            appear
-            v-if="group.opened"
-            tag="div"
-            name="slide-in"
-            :style="{ '--total': group.items }"
-          >
-            <div
-              v-if="group.opened"
-              :class="{
-                'border-l-2 border-gray-800 border-opacity-50': group.opened,
-              }"
-            >
-              <Activity
-                v-for="(item, index) of group.items"
-                :key="index"
-                :item="item"
-                :address="address"
-                :style="{ '--i': index }"
-              /></div
-          ></transition-group>
+        <div
+          v-if="loaded && activity && !nextCursor"
+          class="mt-5 mb-10 text-center text-sm"
+        >
+          End of the activity list
         </div>
       </perfect-scrollbar>
     </div>
@@ -193,9 +246,10 @@ import Activity from "~/components/Activity.vue"
 import MonthlyChart from "~/components/MonthlyChart.vue"
 import prettyms from "pretty-ms"
 import LoadingDots from "~/components/LoadingDots.vue"
+import Tooltip from "~/components/Tooltip.vue"
 
 export default {
-  components: { Activity, MonthlyChart, LoadingDots },
+  components: { Activity, MonthlyChart, LoadingDots, Tooltip },
   props: ["address"],
   data() {
     return {
@@ -211,6 +265,8 @@ export default {
       },
       activity: [],
       activity2: {},
+      daysClosed: [],
+      nextCursor: "",
       loaded: false,
       dropdownOpen: true,
       timestampAdded: "",
@@ -226,6 +282,7 @@ export default {
     },
   },
   methods: {
+    openExternalUrl,
     async getHotspotInfos(address) {
       const res = await fetch("https://api.helium.io/v1/hotspots/" + address)
       let { data } = await res.json()
@@ -253,6 +310,7 @@ export default {
       )
       let { data, cursor } = await res.json()
       this.activity = data
+
       if (cursor) {
         const res2 = await fetch(
           "https://api.helium.io/v1/hotspots/" +
@@ -261,10 +319,45 @@ export default {
             cursor
         )
 
-        let { data: data2 } = await res2.json()
+        let { data: data2, cursor: cursor2 } = await res2.json()
         this.activity = this.activity.concat(data2)
+        this.nextCursor = cursor2
       }
 
+      this.sortByDate()
+
+      // Get latest activity time:
+      if (this.activity[0]) {
+        let latest = this.activity[0].time * 1000
+        this.hotspot.lastUpdated =
+          prettyms(+new Date() - latest, {
+            compact: true,
+          }) + " ago"
+      }
+    },
+
+    async loadMoreActivity() {
+      this.loaded = false
+      try {
+        const res = await fetch(
+          "https://api.helium.io/v1/hotspots/" +
+            this.address +
+            "/activity?cursor=" +
+            this.nextCursor
+        )
+        let { data, cursor } = await res.json()
+        this.activity = this.activity.concat(data)
+        this.nextCursor = cursor
+
+        this.sortByDate()
+        this.loaded = true
+      } catch (e) {
+        console.log(e)
+        this.loaded = true
+      }
+    },
+
+    sortByDate() {
       this.activity2 = this.activity.reduce((acc, item) => {
         const date = new Date(item.time * 1000)
 
@@ -275,17 +368,17 @@ export default {
         acc[dateString] = acc[dateString] || {}
         acc[dateString].items = acc[dateString].items || []
         acc[dateString].items.push(item)
-        acc[dateString].opened = true
+
         return acc
       }, {})
+    },
 
-      // Get latest activity time:
-      if (this.activity[0]) {
-        let latest = this.activity[0].time * 1000
-        this.hotspot.lastUpdated =
-          prettyms(+new Date() - latest, {
-            compact: true,
-          }) + " ago"
+    toggleDay(date) {
+      if (this.daysClosed.includes(date)) {
+        let index = this.daysClosed.indexOf(date)
+        this.daysClosed.splice(index, 1)
+      } else {
+        this.daysClosed.push(date)
       }
     },
 
@@ -342,12 +435,14 @@ export default {
         .reduce((acc, curr) => acc + curr.total, 0)
         .toFixed("2")
     },
+
     async reload() {
       clearInterval(this.timer)
       this.loaded = false
       await this.updateData()
       this.loaded = true
     },
+
     async updateData() {
       await this.getHotspotInfos(this.address)
 

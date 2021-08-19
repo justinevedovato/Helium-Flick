@@ -1,5 +1,5 @@
 const path = require("path")
-const { app, BrowserWindow, screen, Tray, Menu } = require("electron")
+const { app, BrowserWindow, screen, Tray, Menu, ipcMain } = require("electron")
 
 const isDev = process.env.IS_DEV == "true" ? true : false
 
@@ -40,6 +40,7 @@ function createWindow() {
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       nodeIntegration: true,
+      enableRemoteModule: true,
     },
   })
   // and load the index.html of the app.
@@ -56,6 +57,11 @@ function createWindow() {
   //   win.webContents.openDevTools()
   // }
 }
+
+// When click on minimize button
+ipcMain.handle("hide", () => {
+  win.hide()
+})
 
 // Context menu when right-click on the icon in taskbar + open the window
 app.whenReady().then(() => {
@@ -93,7 +99,7 @@ app.whenReady().then(() => {
 })
 
 app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
+  if (process.platform != "darwin") {
     tray.destroy()
     app.quit()
   }

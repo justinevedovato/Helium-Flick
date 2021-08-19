@@ -30,8 +30,6 @@
               <span class="text-yellow-700">●</span>
               <template #tooltip>Relayed</template>
             </Tooltip>
-            <!-- Bullet placeholder during loading: -->
-            <span v-if="!loaded" class="text-transparent text-lg">●</span>
           </div>
 
           <div class="flex w-full items-center mt-0.5">
@@ -41,7 +39,8 @@
             <!-- <span
               v-if="blocksLeft"
               class="text-xs bg-gray-800 px-1.5 pb-0.5 rounded-md"
-              >{{ blocksLeft }}</span>-->
+              >{{ blocksLeft }}</span
+            > -->
           </div>
         </div>
         <!-- Spinner -->

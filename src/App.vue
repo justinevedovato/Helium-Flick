@@ -14,12 +14,15 @@
     "
   >
     <router-link to="/" class="hover:text-gray-300 px-2 py-1 flex"
-      >Home</router-link
-    >
+      >Home
+    </router-link>
 
     <router-link to="/settings" class="hover:text-gray-300 px-2 py-1 flex"
-      >Settings</router-link
-    >
+      >Settings
+    </router-link>
+    <router-link to="/help" class="hover:text-gray-300 px-2 py-1 flex"
+      >?
+    </router-link>
     <div class="drag-area w-full cursor-move"></div>
 
     <div class="w-12 flex align-items-center pr-1">
@@ -44,15 +47,14 @@
 
 <script>
 import store from "./store.js"
-// import { remote } from "electron"
 
 export default {
-  // methods: {
-  //   minimize() {
-  //     console.log("minimized")
-  //     remote.win.hide()
-  //   },
-  // },
+  methods: {
+    async minimize() {
+      console.log("minimized")
+      hideWindow() // function in the preload file
+    },
+  },
   created() {
     const allHotspots = JSON.parse(localStorage.getItem("addresses"))
     store.addresses = allHotspots || []

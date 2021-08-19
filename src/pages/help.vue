@@ -1,0 +1,143 @@
+<template>
+  <h2 class="text-center uppercase text-gray-300 mt-2 mb-3">
+    Help / Infos section
+  </h2>
+  <perfect-scrollbar class="list flex-1">
+    <div class="w-5/6 mx-auto">
+      <h3 class="mb-2">
+        <span class="text-gray-300">Hotspot Status</span>
+        <!-- Divider -->
+        <div
+          class="bg-gradient-to-r from-gray-500 to-gray-900 w-48"
+          style="height: 1px"
+        ></div>
+      </h3>
+
+      <div class="text-sm text-gray-400 space-y-2">
+        <p>
+          <span class="text-green-600 mr-2">●</span> Your hotspot is online on
+          the network
+        </p>
+        <p>
+          <span class="text-yellow-500 animate-pulse mr-2">●</span> Your hotspot
+          is on the network, but still syncing with the blockchain
+        </p>
+        <p>
+          <span class="text-red-700 mr-2">●</span>Your hotspot is offline, and
+          stopped syncing with the blockchain
+        </p>
+        <p>
+          <span class="text-yellow-700 mr-2">●</span>Your hotspot is relayed
+        </p>
+      </div>
+      <p
+        class="
+          text-sm
+          mt-3
+          text-gray-400 text-justify
+          bg-black bg-opacity-20
+          p-4
+          rounded-md
+        "
+      >
+        <span class="underline">Warning</span>: Please note that the status
+        information given by Helium API is very likely <b>not</b> up to date. If
+        your hotspot shows "syncing" but you are seeing activity happening, then
+        it is actually online.<br />Those bullets are shown as an indicator, but
+        if you have a dedicated dashboard, your status info will be much more
+        reliable there.<br />If you see different status in several places, then
+        you should always trust your dashboard before this app, or the Explorer.
+      </p>
+
+      <h3 class="mt-7 mb-2">
+        <span class="text-gray-300">Releases</span>
+
+        <div
+          class="bg-gradient-to-r from-gray-500 to-gray-900 w-52"
+          style="height: 1px"
+        ></div>
+      </h3>
+
+      <div v-if="updateReady" class="text-gray-400 text-sm leading-6">
+        <p>An update is available!</p>
+        <p>
+          Your version is
+          <span class="font-bold">{{ version }}</span>
+        </p>
+        <p>
+          The latest version is
+          <span class="font-bold">{{ newVersion }}</span>
+        </p>
+        <p class="text-center my-4">
+          <a
+            href="#"
+            @click.prevent="
+              openExternalUrl(
+                'https://github.com/justinevedovato/Helium-Flick/releases'
+              )
+            "
+            class="hover:underline bg-black bg-opacity-30 py-2 px-3 rounded-md"
+            >Download it here!
+          </a>
+        </p>
+      </div>
+
+      <div v-else class="text-gray-400 text-sm leading-6">
+        <p>You are up to date!</p>
+        <p class="text-center my-4">
+          <a
+            href="#"
+            @click.prevent="
+              openExternalUrl(
+                'https://github.com/justinevedovato/Helium-Flick/releases'
+              )
+            "
+            class="hover:underline bg-black bg-opacity-30 py-2 px-3 rounded-md"
+          >
+            Find the releases here
+          </a>
+        </p>
+      </div>
+    </div>
+  </perfect-scrollbar>
+
+  <Footer></Footer>
+</template>
+
+<script>
+import Footer from "../components/Footer.vue"
+import { version } from "../../package.json"
+import getLatestRelease from "get-latest-release"
+
+export default {
+  components: { Footer },
+  data() {
+    return {
+      newVersion: "",
+      updateReady: false,
+    }
+  },
+  computed: {
+    version() {
+      return "v" + version
+    },
+  },
+  methods: {
+    openExternalUrl,
+    async getNewRelease() {
+      const res = await getLatestRelease({
+        owner: "justinevedovato",
+        repo: "Helium-Flick",
+      })
+      this.newVersion = res.version
+      if ("v" + version !== this.newVersion) {
+        this.updateReady = true
+      }
+    },
+  },
+
+  async created() {
+    await this.getNewRelease()
+  },
+}
+</script>

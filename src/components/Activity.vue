@@ -75,12 +75,25 @@
           class="text-sm w-11/12 mx-auto flex my-2"
         >
           <div class="flex-1">
-            <span class="text-gray-400 block">Challenger</span>
-            <span class="text-yellow-500 mx-1.5">➜</span>
+            <span class="text-gray-400 block mb-0.5">Challenger</span>
+            <span class="text-yellow-500 m-1.5">➜</span>
 
             <LoadingDots v-if="!isLoaded" />
 
-            <span class="text-gray-300"> {{ challengerName }}</span>
+            <span
+              class="text-gray-300 hover:bg-gray-800 px-2 py-0.5 rounded-md"
+            >
+              <a
+                href="#"
+                @click.prevent="
+                  openExternalUrl(
+                    'https://explorer.helium.com/hotspots/' + challenger
+                  )
+                "
+              >
+                {{ challengerName }}
+              </a></span
+            >
           </div>
           <span class="text-right flex items-end"
             >{{ challengerLocation }}
@@ -92,9 +105,22 @@
           class="text-sm w-11/12 mx-auto flex my-2"
         >
           <div class="flex-1">
-            <span class="text-gray-400 block">Beaconer</span>
+            <span class="text-gray-400 block mb-0.5">Beaconer</span>
             <span class="text-blue-500 mx-1.5">➜</span>
-            <span class="text-gray-300"> {{ beaconerName }}</span>
+            <span
+              class="text-gray-300 hover:bg-gray-800 px-2 py-0.5 rounded-md"
+            >
+              <a
+                href="#"
+                @click.prevent="
+                  openExternalUrl(
+                    'https://explorer.helium.com/hotspots/' + beaconer
+                  )
+                "
+              >
+                {{ beaconerName }}
+              </a>
+            </span>
           </div>
           <span class="text-right flex items-end"
             >{{ beaconerLocation }}
@@ -157,9 +183,11 @@ export default {
       isValid: true,
       detailVisible: false,
       isLoaded: false,
+      challenger: "",
       challengerName: "",
       challengerLocation: "",
       challengerFlagURL: "",
+      beaconer: "",
       beaconerName: "",
       beaconerLocation: "",
       beaconerFlagURL: "",
@@ -244,6 +272,7 @@ export default {
     },
   },
   methods: {
+    openExternalUrl,
     toggleDetails() {
       this.detailVisible = !this.detailVisible
       if (this.detailVisible) {
@@ -257,6 +286,7 @@ export default {
         )
         let { data } = await res.json()
 
+        this.challenger = this.item.challenger
         // get name:
         this.challengerName = data.name
           .split("-")
@@ -285,6 +315,7 @@ export default {
       if (this.item.path && this.item.path[0].challengee !== this.address) {
         let hotspot = this.item.path[0]
         // get name:
+        this.beaconer = hotspot.challengee
         this.beaconerName = animalHash(hotspot.challengee)
 
         // get location:

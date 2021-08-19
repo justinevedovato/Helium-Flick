@@ -1,11 +1,10 @@
 # Helium-Flick
 
-
 Helium-Flick is a desktop application for Helium hotspot owners, in the shape of a small taskbar tool, which allows you to follow the status, activity and earnings for the devices of your list. The purpose of this application is to keep track of all your hotspots, directly at the corner of your screen.
 
 ### Latest version
 
-[Download here](https://github.com/justinevedovato/Helium-Flick/releases)
+[Download here](https://github.com/justinevedovato/Helium-Flick/releases/latest)
 
 ## How to use
 
@@ -16,10 +15,9 @@ You have two options:
 
 Add manually your hotspot's ID (For example, if your hotspot is called magnificent-sparkly-blob, then this is **NOT** the name you want. You will need its address, which is a string of digits and letters. And if you don't know where to find it, you will find it on the [Helium Explorer website](https://explorer.helium.com/), by typing the readable name in the search bar.
 
-- Add from user ID
+- Add account ID
 
 This is more convenient for you if you have several hotspots under the same owner account. Simply paste your Owner ID in the field and it will fetch all your hotspots for you.
-
 
 Once you added your hotspots, you can go back to the Home page, where you will see them appear, showing their readable names, status, location and balance (Daily and total).
 
@@ -35,7 +33,6 @@ It relies on Local Storage to store a list of the hotspots addresses, and uses t
 
 All of the data that is used is completely public and accessible from the [Helium Explorer website](https://explorer.helium.com/) itself.
 You might not want to load their Explorer everytime you want to check how your hotspots are doing, so this app is a tool to make it more compact and makes sure to only get relevant data about your hotspot(s) only.
-
 
 ## Development
 

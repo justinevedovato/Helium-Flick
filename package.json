@@ -18,8 +18,10 @@
   "dependencies": {
     "angry-purple-tiger": "^1.0.5",
     "chart.js": "^3.5.0",
+    "get-latest-release": "^1.1.2",
     "pretty-ms": "^7.0.1",
-    "vue": "^3.1.5",
+    "qrcode-vue3": "^1.4.17",
+    "vue": "^3.2.4",
     "vue-chart-3": "^0.5.6",
     "vue-router": "^4.0.10",
     "vue3-perfect-scrollbar": "^1.5.5"

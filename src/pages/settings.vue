@@ -1,11 +1,11 @@
 <template>
   <div class="flex flex-col flex-1 overflow-y-hidden">
-    <div class="flex flex-col mt-3">
-      <label
-        for="address"
-        class="uppercase text-sm text-gray-300 text-center py-2 bottom"
-      >
-        Add hotspot address
+    <div class="flex flex-col">
+      <h2 class="uppercase text-gray-300 text-center my-2">
+        Manage my Hotspots
+      </h2>
+      <label for="address" class="text-sm w-5/6 mx-auto py-2 bottom">
+        Add hotspot address:
       </label>
       <div class="mx-6 flex group">
         <input
@@ -20,11 +20,10 @@
         <button @click="addFromAddress">Add</button>
       </div>
 
-      <label
-        for="user"
-        class="uppercase text-sm text-gray-300 text-center py-2 bottom mt-3"
-      >
-        Add from user id
+      <p class="text-center text-sm mt-3">- OR -</p>
+
+      <label for="user" class="text-sm w-5/6 mx-auto pb-2 bottom">
+        Add account ID:
       </label>
       <div class="mx-6 flex group">
         <input
@@ -39,15 +38,15 @@
         <button @click="addFromUser">Add</button>
       </div>
 
-      <p class="text-center h-5 mt-2">
+      <p class="text-center h-4 mt-1">
         <LoadingDots v-if="loaded" />
-        <span v-else class="text-center h-7 mt-2 text-sm"> {{ message }}</span>
+        <span v-else class="text-center text-sm"> {{ message }}</span>
       </p>
 
       <div
         @click="clearAll"
         class="
-          bg-gray-800
+          bg-black bg-opacity-30
           text-gray-300
           cursor-pointer
           mx-auto
@@ -55,7 +54,7 @@
           py-1.5
           px-2.5
           mt-3
-          mb-5
+          mb-4
           rounded-md
           hover:bg-red-900
         "
@@ -76,12 +75,22 @@
       "
       style="height: 1px"
     ></div>
-    <perfect-scrollbar class="list flex-1 px-2 pb-3">
-      <div class="flex-1">
+    <perfect-scrollbar class="list flex-1 px-6 pb-3 w-11/12 mx-auto">
+      <div class="flex-1 pt-1.5">
         <div
           v-for="item in addresses"
           :key="item"
-          class="flex w-full px-10 py-1.5 items-center"
+          class="
+            flex
+            w-full
+            mx-auto
+            py-1
+            px-3
+            items-center
+            text-sm
+            hover:bg-black hover:bg-opacity-20
+            rounded-md
+          "
         >
           <p class="text-gray-300 flex-1">
             {{ newName(item) }}
@@ -94,69 +103,38 @@
               cursor-pointer
               hover:bg-indigo-900 hover:text-gray-200
               rounded-full
-              leading-5
               text-sm
             "
           >
-            <img src="../assets/close.svg" alt="" class="h-6 w-6 p-1.5" />
+            <img src="../assets/close.svg" alt="" class="h-5 w-5 p-1.5" />
           </span>
         </div>
       </div>
     </perfect-scrollbar>
-    <!-- Divider: -->
-    <div
-      class="
-        w-full
-        bg-gradient-to-r
-        from-gray-900
-        via-gray-700
-        to-gray-900
-        mx-auto
-      "
-      style="height: 1px"
-    ></div>
-    <div class="h-10 mb-0.5 flex items-center w-full relative">
-      <span class="text-xs text-center mx-auto"
-        >HeliumFlick v{{ version }}
-      </span>
-
-      <div
-        class="absolute right-2 w-7 opacity-50 hover:opacity-100 cursor-pointer"
-      >
-        <Tooltip inline dir="left">
-          <img src="../assets/heart.svg" alt="" class="heart" />
-          <img src="../assets/hand.svg" alt="" class="w-6 bottom-1.5 right-3" />
-          <template #tooltip> Donate </template>
-        </Tooltip>
-      </div>
-    </div>
+    <Footer></Footer>
   </div>
 </template>
 
 <script>
 import store from "~/store.js"
-import { version } from "../../package.json"
 import LoadingDots from "~/components/LoadingDots.vue"
 import Tooltip from "../components/Tooltip.vue"
+import Footer from "../components/Footer.vue"
 import animalHash from "angry-purple-tiger"
 
 export default {
-  components: { LoadingDots, Tooltip },
+  components: { LoadingDots, Tooltip, Footer },
   data() {
     return {
       address: "",
       user: "",
       message: "",
       loaded: false,
-      version: "",
     }
   },
   computed: {
     addresses() {
       return store.addresses
-    },
-    version() {
-      return version
     },
   },
   methods: {
@@ -230,47 +208,5 @@ input {
 
 button {
   @apply bg-gray-700 text-gray-300 px-2.5 text-sm rounded-r-md hover:bg-indigo-700;
-}
-
-.heart {
-  @apply -mb-2.5 ml-1.5;
-  width: 13px;
-  -webkit-animation: heartbeat 1.2s ease infinite;
-  animation: heartbeat 1.2s ease infinite;
-}
-
-@-webkit-keyframes heartbeat {
-  0% {
-    -webkit-transform: scale(0.8);
-  }
-  10% {
-    -webkit-transform: scale(1);
-  }
-  30% {
-    -webkit-transform: scale(0.8);
-  }
-  40% {
-    -webkit-transform: scale(0.95);
-  }
-  to {
-    -webkit-transform: scale(0.8);
-  }
-}
-@keyframes heartbeat {
-  0% {
-    transform: scale(0.8);
-  }
-  10% {
-    transform: scale(1);
-  }
-  30% {
-    transform: scale(0.8);
-  }
-  40% {
-    transform: scale(0.95);
-  }
-  to {
-    transform: scale(0.8);
-  }
 }
 </style>

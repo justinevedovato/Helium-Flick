@@ -7,6 +7,10 @@
         'left-full top-1/2 transform -translate-y-1/2 ml-1': dir == 'right',
         '-left-1 top-1/2 transform -translate-y-1/2 -translate-x-full':
           dir == 'left',
+        'left-1/2 top-1 transform -translate-y-full -translate-x-1/2':
+          dir == 'top',
+        'left-1/2 -top-1 transform translate-y-full -translate-x-1/2':
+          dir == 'bottom',
       }"
       ><slot name="tooltip"></slot
     ></span>

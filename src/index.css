@@ -4,7 +4,7 @@
 @tailwind utilities;
 
 #app {
-  @apply bg-gray-900 rounded-lg shadow-sm flex flex-col h-screen overflow-hidden text-gray-500 relative;
+  @apply bg-gray-900 rounded-lg shadow-sm flex flex-col h-screen overflow-hidden text-gray-400 relative;
   font-family: "Barlow", sans serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
