@@ -60,6 +60,7 @@ export default {
     return {
       newVersion: "",
       updateReady: false,
+      timer: "",
     }
   },
   methods: {
@@ -76,7 +77,6 @@ export default {
         if (store.versions.current !== store.versions.new) {
           this.updateReady = true
         }
-        console.log(store.versions, this.updateReady)
       } catch (err) {
         if (err.code === "ENOTFOUND") {
           throw new Error("Network error.")
@@ -90,7 +90,11 @@ export default {
   created() {
     const allHotspots = JSON.parse(localStorage.getItem("addresses"))
     store.addresses = allHotspots || []
+    this.timer = setInterval(this.getNewRelease, 3600000) // Every hour
     this.getNewRelease()
+  },
+  beforeDestroy() {
+    clearInterval(this.timer)
   },
 }
 </script>

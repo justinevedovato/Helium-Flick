@@ -21,8 +21,8 @@
       <p>
         <b>HeliumFlick</b> is open source and free to use.<br />
         If you want to support this project, and have some HNT to spare, here is
-        the QR code to my HNT wallet, that you can use with your mobile
-        <b>Helium Hotspot</b> app.
+        the QR code to my HNT wallet, that you can use with your
+        <b>Helium Hotspot</b> mobile app.
       </p>
 
       <QRCodeVue3
