@@ -18,7 +18,7 @@
         openExternalUrl('https://github.com/justinevedovato/Helium-Flick')
       "
       class="text-xs text-gray-500 text-center mx-auto"
-      >HeliumFlick v{{ version }}
+      >HeliumFlick {{ version }}
     </a>
 
     <div

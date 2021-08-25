@@ -8,61 +8,46 @@
         text-sm
         w-10/12
         mx-auto
-        mt-5
-        mb-7
+        flex flex-col
+        mt-3
+        mb-5
         text-center
         space-y-5
         text-gray-400
       "
     >
-      <img src="../assets/gift.svg" class="w-12 mx-auto opacity-50" />
+      <img src="../assets/gift.svg" class="w-10 mx-auto opacity-50 -mb-2" />
 
-      <p>HeliumFlick is open source and free to use.</p>
       <p>
+        <b>HeliumFlick</b> is open source and free to use.<br />
         If you want to support this project, and have some HNT to spare, here is
         the QR code to my HNT wallet, that you can use with your mobile
         <b>Helium Hotspot</b> app.
       </p>
+
+      <QRCodeVue3
+        :width="190"
+        :height="190"
+        value="149kQ47ptZDkajLCsTg3AEX3G6qgaLBj18NBLcokjA9i4KznBVo"
+        :dotsOptions="{
+          type: 'rounded',
+          color: '#26249a',
+          gradient: {
+            type: 'linear',
+            rotation: 0,
+            colorStops: [
+              { offset: 0, color: '#000000' },
+              { offset: 1, color: '#26249a' },
+            ],
+          },
+        }"
+        :cornersSquareOptions="{
+          type: 'square',
+        }"
+        class="mx-auto py-1"
+      />
       <p>Any tip will be greatly appreciated!</p>
     </div>
-
-    <QRCodeVue3
-      :width="190"
-      :height="190"
-      value="walletaddresshere"
-      :dotsOptions="{
-        type: 'rounded',
-        color: '#26249a',
-        gradient: {
-          type: 'linear',
-          rotation: 0,
-          colorStops: [
-            { offset: 0, color: '#000000' },
-            { offset: 1, color: '#26249a' },
-          ],
-        },
-      }"
-      :cornersSquareOptions="{
-        type: 'square',
-      }"
-      class="mx-auto"
-    />
-
-    <router-link
-      to="/settings"
-      class="
-        px-3
-        py-1.5
-        mx-auto
-        rounded-md
-        mt-5
-        mb-7
-        bg-black bg-opacity-30
-        hover:bg-opacity-60
-        text-sm text-gray-400
-      "
-      >Back
-    </router-link>
   </perfect-scrollbar>
 </template>
 

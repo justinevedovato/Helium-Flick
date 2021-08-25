@@ -48,11 +48,15 @@
     "productName": "HeliumFlick",
     "copyright": "Copyright © 2021 Justine V",
     "mac": {
+      "icon": "./public/512x512.png",
       "category": "public.app-category.utilities"
     },
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true
+    },
+    "win": {
+      "icon": "./public/logo2.png"
     },
     "files": [
       "dist/**/*",
