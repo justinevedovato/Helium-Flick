@@ -294,9 +294,11 @@ export default {
           .join(" ")
 
         // get location:
-        if (data.geocode.short_city.length > 16) {
+        if (!data.geocode.short_city) {
+          this.challengerLocation = "unknown, " + data.geocode.short_country
+        } else if (data.geocode.short_city.length > 16) {
           this.challengerLocation =
-            data.geocode.short_city.slice(0, 12) +
+            data.geocode.short_city.slice(0, 14) +
             "...," +
             data.geocode.short_country
         } else {
@@ -321,7 +323,7 @@ export default {
         // get location:
         if (hotspot.geocode && hotspot.geocode.short_city.length > 16) {
           this.beaconerLocation =
-            hotspot.geocode.short_city.slice(0, 12) +
+            hotspot.geocode.short_city.slice(0, 14) +
             "...," +
             hotspot.geocode.short_country
         } else {

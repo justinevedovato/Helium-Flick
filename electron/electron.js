@@ -1,4 +1,5 @@
 const path = require("path")
+const AutoLaunch = require("auto-launch")
 const { app, BrowserWindow, screen, Tray, Menu, ipcMain } = require("electron")
 
 const isDev = process.env.IS_DEV == "true" ? true : false
@@ -10,6 +11,21 @@ let windowSize = {
 
 let tray = null
 let win
+
+// Start on launch
+var autoLauncher = new AutoLaunch({
+  name: "Helium-Flick",
+})
+// Checking if autoLaunch is enabled, if not then enabling it.
+// autoLauncher
+//   .isEnabled()
+//   .then(function (isEnabled) {
+//     if (isEnabled) return
+//     autoLauncher.enable()
+//   })
+//   .catch(function (err) {
+//     throw err
+//   })
 
 // Calculate position of the window according to screen size (bottom right)
 function calcWindowPosition() {
@@ -37,6 +53,7 @@ function createWindow() {
     skipTaskbar: true,
     movable: true,
     alwaysOnTop: true,
+    icon: path.join(__dirname, "../public/logo2.png"),
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       nodeIntegration: true,
@@ -70,13 +87,41 @@ app.whenReady().then(() => {
   )
   const contextMenu = Menu.buildFromTemplate([
     {
+      id: "autolaunch",
+      label: "Run at startup",
+      type: "checkbox",
+      checked: false,
+      click() {
+        autoLauncher.isEnabled().then((enabled) => {
+          !enabled ? autoLauncher.enable() : autoLauncher.disable()
+        })
+      },
+    },
+
+    {
+      label: "Always on top",
+      type: "checkbox",
+      checked: true,
+      click() {
+        win.setAlwaysOnTop(!win.isAlwaysOnTop())
+      },
+    },
+    { type: "separator" },
+    {
       label: "Quit",
       click() {
+        tray.destroy()
         app.quit()
       },
     },
   ])
-  tray.setToolTip("Helium Miner Overview")
+
+  autoLauncher.isEnabled().then((enabled) => {
+    const autolaunchItem = contextMenu.getMenuItemById("autolaunch")
+    autolaunchItem.checked = enabled
+  })
+
+  tray.setToolTip("HeliumFlick")
   tray.addListener("click", () => {
     if (win.isVisible()) {
       win.hide()

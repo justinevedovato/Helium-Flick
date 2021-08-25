@@ -2,16 +2,10 @@
   <h2 class="text-center uppercase text-gray-300 mt-2 mb-3">
     Help / Infos section
   </h2>
+
   <perfect-scrollbar class="list flex-1">
     <div class="w-5/6 mx-auto">
-      <h3 class="mb-2">
-        <span class="text-gray-300">Hotspot Status</span>
-        <!-- Divider -->
-        <div
-          class="bg-gradient-to-r from-gray-500 to-gray-900 w-48"
-          style="height: 1px"
-        ></div>
-      </h3>
+      <h3>Hotspot Status</h3>
 
       <div class="text-sm text-gray-400 space-y-2">
         <p>
@@ -41,32 +35,33 @@
         "
       >
         <span class="underline">Warning</span>: Please note that the status
-        information given by Helium API is very likely <b>not</b> up to date. If
-        your hotspot shows "syncing" but you are seeing activity happening, then
-        it is actually online.<br />Those bullets are shown as an indicator, but
-        if you have a dedicated dashboard, your status info will be much more
+        information given by Helium API is very likely <b>outdated</b>. If your
+        hotspot shows "syncing" but you are seeing activity happening, then it
+        is actually online.<br />Those bullets are shown as an indicator, but if
+        you have a dedicated dashboard, your status info will be much more
         reliable there.<br />If you see different status in several places, then
         you should always trust your dashboard before this app, or the Explorer.
       </p>
 
-      <h3 class="mt-7 mb-2">
-        <span class="text-gray-300">Releases</span>
-
-        <div
-          class="bg-gradient-to-r from-gray-500 to-gray-900 w-52"
-          style="height: 1px"
-        ></div>
+      <h3>
+        Releases
+        <span
+          v-if="updateReady"
+          class="bg-red-700 text-white py-0.5 px-1 rounded-sm ml-2"
+          style="font-size: 10px"
+          >NEW</span
+        >
       </h3>
 
       <div v-if="updateReady" class="text-gray-400 text-sm leading-6">
         <p>An update is available!</p>
         <p>
           Your version is
-          <span class="font-bold">{{ version }}</span>
+          <span class="font-bold">{{ currentVersion }}.</span>
         </p>
         <p>
           The latest version is
-          <span class="font-bold">{{ newVersion }}</span>
+          <span class="font-bold">{{ newVersion }}.</span>
         </p>
         <p class="text-center my-4">
           <a
@@ -76,7 +71,14 @@
                 'https://github.com/justinevedovato/Helium-Flick/releases'
               )
             "
-            class="hover:underline bg-black bg-opacity-30 py-2 px-3 rounded-md"
+            class="
+              hover:underline
+              text-gray-200
+              bg-black bg-opacity-30
+              py-2
+              px-3
+              rounded-md
+            "
             >Download it here!
           </a>
         </p>
@@ -106,38 +108,38 @@
 
 <script>
 import Footer from "../components/Footer.vue"
-import { version } from "../../package.json"
-import getLatestRelease from "get-latest-release"
+import store from "../store.js"
 
 export default {
   components: { Footer },
   data() {
     return {
-      newVersion: "",
+      currentVersion: store.versions.current,
+      newVersion: store.versions.new,
       updateReady: false,
     }
   },
-  computed: {
-    version() {
-      return "v" + version
-    },
-  },
   methods: {
     openExternalUrl,
-    async getNewRelease() {
-      const res = await getLatestRelease({
-        owner: "justinevedovato",
-        repo: "Helium-Flick",
-      })
-      this.newVersion = res.version
-      if ("v" + version !== this.newVersion) {
+    hasNewVersion() {
+      if (this.currentVersion !== this.newVersion) {
         this.updateReady = true
       }
     },
   },
-
-  async created() {
-    await this.getNewRelease()
+  created() {
+    this.hasNewVersion()
   },
 }
 </script>
+
+<style scoped>
+h3 {
+  @apply mb-3 mt-2 text-gray-300 relative;
+  &::after {
+    @apply w-48 absolute -bottom-0.5 left-0 bg-gradient-to-r from-gray-500 to-gray-900;
+    content: "";
+    height: 1px;
+  }
+}
+</style>

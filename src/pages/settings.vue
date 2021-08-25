@@ -4,7 +4,10 @@
       <h2 class="uppercase text-gray-300 text-center my-2">
         Manage my Hotspots
       </h2>
-      <label for="address" class="text-sm w-5/6 mx-auto py-2 bottom">
+      <label
+        for="address"
+        class="text-sm text-gray-300 w-5/6 mx-auto py-2 bottom"
+      >
         Add hotspot address:
       </label>
       <div class="mx-6 flex group">
@@ -20,9 +23,9 @@
         <button @click="addFromAddress">Add</button>
       </div>
 
-      <p class="text-center text-sm mt-3">- OR -</p>
+      <p class="text-center text-sm mt-3 -mb-2">- OR -</p>
 
-      <label for="user" class="text-sm w-5/6 mx-auto pb-2 bottom">
+      <label for="user" class="text-sm text-gray-300 w-5/6 mx-auto pb-2 bottom">
         Add account ID:
       </label>
       <div class="mx-6 flex group">
@@ -147,7 +150,7 @@ export default {
         "https://api.helium.io/v1/hotspots/" + this.address
       )
       // Check if the hotspot exists
-      if (res.status == "404") {
+      if (res.status == "404" || !this.address) {
         this.loaded = false
         this.message = "Sorry! This address doesn't exist"
         this.address = ""

@@ -4,17 +4,10 @@
     <div class="flex-1 flex flex-col h-screen w-full absolute">
       <div class="flex pb-1.5 p-3">
         <img
-          alt="Vue logo"
-          src="https://cryptologos.cc/logos/helium-hnt-logo.svg"
-          class="
-            w-14
-            object-top object-contain
-            h-full
-            justify-self-start
-            mt-2
-            mr-5
-            ml-0.5
-          "
+          alt="heliumflick logo"
+          src="../../assets/nocirclelogo.svg"
+          class="logo object-contain rounded-full object-top mt-1 mr-3 ml-1"
+          style="width: 64px; height: 64px; border: 1px solid #7384c3"
         />
         <div class="text-center flex-1 mb-2">
           <div
@@ -465,5 +458,3 @@ export default {
   },
 }
 </script>
-
-<style lang="postcss"></style>

@@ -1,3 +1,3 @@
 import { reactive } from "vue"
 
-export default reactive({ addresses: [], hotspots: {} })
+export default reactive({ addresses: [], hotspots: {}, versions: {} })

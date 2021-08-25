@@ -20,7 +20,12 @@
     <router-link to="/settings" class="hover:text-gray-300 px-2 py-1 flex"
       >Settings
     </router-link>
-    <router-link to="/help" class="hover:text-gray-300 px-2 py-1 flex"
+    <router-link
+      to="/help"
+      class="hover:text-gray-300 px-2 py-1 flex"
+      :class="{
+        'text-red-600 font-bold hover:text-red-400': updateReady,
+      }"
       >?
     </router-link>
     <div class="drag-area w-full cursor-move"></div>
@@ -47,17 +52,45 @@
 
 <script>
 import store from "./store.js"
+import { version } from "../package.json"
+import axios from "axios"
 
 export default {
+  data() {
+    return {
+      newVersion: "",
+      updateReady: false,
+    }
+  },
   methods: {
     async minimize() {
-      console.log("minimized")
       hideWindow() // function in the preload file
+    },
+    async getNewRelease() {
+      try {
+        const res = await axios.get(
+          "https://api.github.com/repos/justinevedovato/Helium-Flick/releases/latest"
+        )
+        store.versions = { new: res.data.tag_name, current: "v" + version }
+
+        if (store.versions.current !== store.versions.new) {
+          this.updateReady = true
+        }
+        console.log(store.versions, this.updateReady)
+      } catch (err) {
+        if (err.code === "ENOTFOUND") {
+          throw new Error("Network error.")
+        } else if (err.response && err.response.status === 404) {
+          throw new Error("Could not find a release.")
+        }
+        throw new Error(err)
+      }
     },
   },
   created() {
     const allHotspots = JSON.parse(localStorage.getItem("addresses"))
     store.addresses = allHotspots || []
+    this.getNewRelease()
   },
 }
 </script>

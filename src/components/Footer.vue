@@ -37,13 +37,13 @@
 
 <script>
 import Tooltip from "./Tooltip.vue"
-import { version } from "../../package.json"
+import store from "../store.js"
 
 export default {
   components: { Tooltip },
   computed: {
     version() {
-      return version
+      return store.versions.current
     },
   },
   methods: {
