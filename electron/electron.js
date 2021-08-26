@@ -83,7 +83,7 @@ ipcMain.handle("hide", () => {
 // Context menu when right-click on the icon in taskbar + open the window
 app.whenReady().then(() => {
   tray = new Tray(
-    path.join(__dirname, "../", isDev ? "public" : "dist", "favicon.ico")
+    path.join(__dirname, "../", isDev ? "public" : "dist", "tray.png")
   )
   const contextMenu = Menu.buildFromTemplate([
     {

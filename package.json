@@ -49,7 +49,10 @@
     "copyright": "Copyright © 2021 Justine V",
     "mac": {
       "icon": "./public/512x512.png",
-      "category": "public.app-category.utilities"
+      "category": "public.app-category.utilities",
+      "extendInfo": {
+        "LSUIElement": true
+      }
     },
     "nsis": {
       "oneClick": false,
