@@ -129,7 +129,9 @@ app.whenReady().then(() => {
       win.show()
     }
   })
-  tray.setContextMenu(contextMenu)
+  tray.addListener('right-click', () => {
+    tray.popUpContextMenu(contextMenu)
+  })
   createWindow()
 
   app.on("minimize", () => {
