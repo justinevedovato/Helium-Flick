@@ -6,6 +6,12 @@ module.exports = {
       fontSize: {
         customxs: ".78rem",
       },
+      colors: {
+        seagreen: "#349f58",
+        eastblue: "#2596be",
+        blumine: "#1a6985",
+        corn: "#D0ce00",
+      },
     },
   },
   variants: {

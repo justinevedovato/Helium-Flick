@@ -8,15 +8,10 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref } from "vue"
+import { computed, ref } from "vue"
 import { BarChart } from "vue-chart-3"
 import { Chart, registerables } from "chart.js"
 Chart.register(...registerables)
-
-const data = reactive({
-  name: "Frank",
-  age: 21,
-})
 
 const props = defineProps({
   data: {

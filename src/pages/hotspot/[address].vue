@@ -3,12 +3,62 @@
     <!-- Header -->
     <div class="flex-1 flex flex-col h-screen w-full absolute">
       <div class="flex pb-1.5 p-3">
-        <img
-          alt="heliumflick logo"
-          src="../../assets/nocirclelogo.svg"
-          class="logo object-contain rounded-full object-top mt-1 mr-3 ml-1"
-          style="width: 64px; height: 64px; border: 1px solid #7384c3"
-        />
+        <div>
+          <img
+            alt="heliumflick logo"
+            src="../../assets/nocirclelogo.svg"
+            class="logo object-contain rounded-full object-top mt-1 mr-3 ml-1"
+            style="width: 64px; height: 64px; border: 1px solid #7384c3"
+          />
+          <a
+            href="#"
+            @click.prevent="
+              openExternalUrl(
+                'https://explorer.helium.com/accounts/' + hotspot.brandAddress
+              )
+            "
+            class="
+              text-sm
+              mt-2
+              flex
+              items-center
+              px-1.5
+              py-0.5
+              hover:bg-black hover:bg-opacity-20 hover:text-gray-300
+              cursor-pointer
+              rounded-md
+              absolute
+            "
+          >
+            <div
+              class="h-2 w-2 mr-2"
+              :class="{
+                'bg-seagreen': hotspot.brand == 'SenseCAP',
+                'bg-blumine': hotspot.brand == 'LongAP',
+                'bg-red-800': hotspot.brand == 'Bobcat',
+                'bg-black': hotspot.brand == 'Nebra',
+                'bg-purple-800': hotspot.brand == 'Helium Inc',
+                'bg-indigo-900': hotspot.brand == 'Helium Inc (old)',
+                'bg-yellow-600': hotspot.brand == 'Cal-Chip',
+                'bg-purple-500': hotspot.brand == 'SyncroBit',
+                'bg-pink-700': hotspot.brand == 'Linxdot',
+                'bg-yellow-500': hotspot.brand == 'Kerlink',
+                'bg-red-600': hotspot.brand == 'RAK wireless',
+                'bg-green-400': hotspot.brand == 'COTX Networks',
+                'bg-indigo-700': hotspot.brand == 'Heltec Automation',
+                'bg-pink-500': hotspot.brand == 'Smart Mimic',
+                'bg-green-300': hotspot.brand == 'Pisces Miner',
+                'bg-gray-600': hotspot.brand == 'DeWi Foundation',
+                'bg-blue-800': hotspot.brand == 'FreedomFi',
+                'bg-eastblue': hotspot.brand == 'ClodPi',
+                'bg-corn': hotspot.brand == 'Controllino',
+                'bg-white': hotspot.brand == 'Data Only',
+              }"
+            ></div>
+            <span>{{ hotspot.brand }}</span>
+          </a>
+        </div>
+
         <div class="text-center flex-1 mb-2">
           <div
             class="
@@ -64,14 +114,17 @@
               ><LoadingDots v-if="!hotspot.rewardAmount" class="self-center" />
               <span>{{ hotspot.rewardAmount }}</span>
             </span>
+
             <!-- Last activity seen: -->
+
             <div
               class="
                 text-sm
                 justify-end
                 text-gray-400
-                mt-2
+                mt-2.5
                 mr-1.5
+                -mb-1
                 flex
                 align-baseline
               "
@@ -99,6 +152,7 @@
             class="
               w-56
               h-20
+              ml-1.5
               bg-black bg-opacity-20
               rounded-md
               flex
@@ -255,6 +309,8 @@ export default {
         week: "",
         month: "",
         monthAll: [],
+        brand: "",
+        brandAddress: "",
       },
       activity: [],
       activity2: {},
@@ -279,9 +335,24 @@ export default {
     async getHotspotInfos(address) {
       const res = await fetch("https://api.helium.io/v1/hotspots/" + address)
       let { data } = await res.json()
-      this.hotspot.status = data.status.online
-      this.timestampAdded = data.timestamp_added.split(".")[0] + "Z"
 
+      this.timestampAdded = data.timestamp_added.split(".")[0] + "Z"
+      this.hotspot.brandAddress = data.payer
+
+      // Status
+      // Check if LongAP
+      // if (data.payer == "12zX4jgDGMbJgRwmCfRNGXBuphkQRqkUTcLzYHTQvd4Qgu8kiL4") {
+      //   const longapRes = await fetch(
+      //     "https://status.longap.com/hotspot/status/" + address,
+      //     {
+      //       mode: "no-cors",
+      //     }
+      //   )
+      //   let longapData = await longapRes.json()
+      //   console.log(longapData)
+      // } else {
+
+      this.hotspot.status = data.status.online
       if (
         data.status.listen_addrs &&
         data.status.listen_addrs[0] &&
@@ -294,6 +365,88 @@ export default {
         data.status.online != "offline"
       ) {
         this.hotspot.status = "syncing"
+      }
+      // }
+
+      // Brand:
+      if (data.payer == "13daGGWvDQyTyHFDCPz8zDSVTWgPNNfJ4oh31Teec4TRWfjMx53") {
+        this.hotspot.brand = "Helium Inc"
+      } else if (
+        data.payer == "13ENbEQPAvytjLnqavnbSAzurhGoCSNkGECMx7eHHDAfEaDirdY"
+      ) {
+        this.hotspot.brand = "Cal-Chip"
+      } else if (
+        data.payer == "13Zni1he7KY9pUmkXMhEhTwfUpL9AcEV1m2UbbvFsrU9QPTMgE3"
+      ) {
+        this.hotspot.brand = "Nebra"
+      } else if (
+        data.payer == "14rb2UcfS9U89QmKswpZpjRCUVCVu1haSyqyGY486EvsYtvdJmR"
+      ) {
+        this.hotspot.brand = "SyncroBit"
+      } else if (
+        data.payer == "14sKWeeYWQWrBSnLGq79uRQqZyw3Ldi7oBdxbF6a54QboTNBXDL"
+      ) {
+        this.hotspot.brand = "Bobcat"
+      } else if (
+        data.payer == "14NBXJE5kAAZTMigY4dcjXSMG4CSqjYwvteQWwQsYhsu2TKN6AF"
+      ) {
+        this.hotspot.brand = "SenseCAP"
+      } else if (
+        data.payer == "14fzfjFcHpDR1rTH8BNPvSi5dKBbgxaDnmsVPbCjuq9ENjpZbxh"
+      ) {
+        this.hotspot.brand = "Helium Inc (old)"
+      } else if (
+        data.payer == "14eUfY1GsjK4WH6uZYoeagnFtigBKdvPruAXLmc5UsUMEDj3yib"
+      ) {
+        this.hotspot.brand = "Linxdot"
+      } else if (
+        data.payer == "12zX4jgDGMbJgRwmCfRNGXBuphkQRqkUTcLzYHTQvd4Qgu8kiL4"
+      ) {
+        this.hotspot.brand = "LongAP"
+      } else if (
+        data.payer == "13Mpg5hCNjSxHJvWjaanwJPBuTXu1d4g5pGvGBkqQe3F8mAwXhK"
+      ) {
+        this.hotspot.brand = "Kerlink"
+      } else if (
+        data.payer == "14h2zf1gEr9NmvDb2U53qucLN2jLrKU1ECBoxGnSnQ6tiT6V2kM"
+      ) {
+        this.hotspot.brand = "RAK wireless"
+      } else if (
+        data.payer == "13cbbZXzqwp6YMM5JvAu5T1TRhenENEJVU5Q8vpLhunQYE1Acpp"
+      ) {
+        this.hotspot.brand = "COTX Networks"
+      } else if (
+        data.payer == "14iC6N1HkqUjH7WEChHVQhPqJ1hbWBKpZXZVeHHykCA7tNDYF2C"
+      ) {
+        this.hotspot.brand = "Heltec Automation"
+      } else if (
+        data.payer == "13MS2kZHU4h6wp3tExgoHdDFjBsb9HB9JBvcbK9XmfNyJ7jqzVv"
+      ) {
+        this.hotspot.brand = "Smart Mimic"
+      } else if (
+        data.payer == "134C7Hn3vhfBLQZex4PVwtxQ2uPJH97h9YD2bhzy1W2XhMJyY6d"
+      ) {
+        this.hotspot.brand = "Pisces Miner"
+      } else if (
+        data.payer == "13LVwCqZEKLTVnf3sjGPY1NMkTE7fWtUVjmDfeuscMFgeK3f9pn"
+      ) {
+        this.hotspot.brand = "DeWi Foundation"
+      } else if (
+        data.payer == "13y2EqUUzyQhQGtDSoXktz8m5jHNSiwAKLTYnHNxZq2uH5GGGym"
+      ) {
+        this.hotspot.brand = "FreedomFi"
+      } else if (
+        data.payer == "13XuP2DjHEHVkKguDDZD2ev5AeqMLuJ8UQ44efEcDmVTnBcvc6F"
+      ) {
+        this.hotspot.brand = "ClodPi"
+      } else if (
+        data.payer == "14go8hvEDnotWTyhYv6Hu5PTnRUAQzJqbB6dsDm1oThkCcZe9zd"
+      ) {
+        this.hotspot.brand = "Controllino"
+      } else if (data.payer === data.owner) {
+        this.hotspot.brand = "Data Only"
+      } else {
+        this.hotspot.brand = "Unknown"
       }
     },
 

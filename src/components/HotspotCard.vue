@@ -8,13 +8,54 @@
   <div>
     <router-link :to="link" class="flex">
       <div
-        class="flex w-full hover:bg-gray-800 mx-2 rounded-lg h-16 items-center"
+        class="
+          card
+          flex
+          w-full
+          hover:bg-gray-800
+          mx-2
+          rounded-md
+          overflow-hidden
+          items-center
+        "
+        style="height: 68px"
       >
+        <div class="h-full relative group">
+          <div
+            v-if="showMaker"
+            class="w-2 h-full opacity-60 brand-color"
+            :class="{
+              'bg-seagreen': brand == 'SenseCAP',
+              'bg-blumine': brand == 'LongAP',
+              'bg-red-800': brand == 'Bobcat',
+              'bg-black': brand == 'Nebra',
+              'bg-purple-800': brand == 'Helium Inc',
+              'bg-indigo-900': brand == 'Helium Inc (old)',
+              'bg-yellow-600': brand == 'Cal-Chip',
+              'bg-purple-500': brand == 'SyncroBit',
+              'bg-pink-700': brand == 'Linxdot',
+              'bg-yellow-500': brand == 'Kerlink',
+              'bg-red-600': brand == 'RAK wireless',
+              'bg-green-400': brand == 'COTX Networks',
+              'bg-indigo-700': brand == 'Heltec Automation',
+              'bg-pink-500': brand == 'Smart Mimic',
+              'bg-green-300': brand == 'Pisces Miner',
+              'bg-gray-600': brand == 'DeWi Foundation',
+              'bg-blue-800': brand == 'FreedomFi',
+              'bg-eastblue': brand == 'ClodPi',
+              'bg-corn': brand == 'Controllino',
+              'bg-white': brand == 'Data Only',
+            }"
+          ></div>
+          <span class="brand-name whitespace-nowrap">{{ brand }}</span>
+        </div>
+
         <div class="flex flex-1 flex-col px-3">
           <div class="flex items-baseline">
             <p class="text-white inline">{{ name }}</p>
             <Tooltip inline class="ml-2">
               <span
+                v-if="loaded"
                 :class="{
                   'text-green-600': status == 'online',
                   'text-yellow-500 animate-pulse': status == 'syncing',
@@ -33,6 +74,7 @@
           </div>
 
           <div class="flex w-full items-center mt-0.5">
+            <LoadingDots v-if="!location" />
             <span class="text-sm inline flex-1">
               {{ location }}
             </span>
@@ -99,10 +141,12 @@
 
 <script>
 import animalHash from "angry-purple-tiger"
+import store from "../store"
 import Tooltip from "./Tooltip.vue"
+import LoadingDots from "~/components/LoadingDots.vue"
 
 export default {
-  components: { Tooltip },
+  components: { Tooltip, LoadingDots },
   props: ["item"],
   data() {
     return {
@@ -115,6 +159,8 @@ export default {
       timestampAdded: "",
       loaded: false,
       timer: "",
+      brand: "",
+      showMaker: store.display.maker,
     }
   },
 
@@ -136,6 +182,86 @@ export default {
       let { data } = await res.json()
       this.timestampAdded = data.timestamp_added.split(".")[0] + "Z"
       this.status = data.status.online
+      // Brand:
+      if (data.payer == "13daGGWvDQyTyHFDCPz8zDSVTWgPNNfJ4oh31Teec4TRWfjMx53") {
+        this.brand = "Helium Inc"
+      } else if (
+        data.payer == "13ENbEQPAvytjLnqavnbSAzurhGoCSNkGECMx7eHHDAfEaDirdY"
+      ) {
+        this.brand = "Cal-Chip"
+      } else if (
+        data.payer == "13Zni1he7KY9pUmkXMhEhTwfUpL9AcEV1m2UbbvFsrU9QPTMgE3"
+      ) {
+        this.brand = "Nebra"
+      } else if (
+        data.payer == "14rb2UcfS9U89QmKswpZpjRCUVCVu1haSyqyGY486EvsYtvdJmR"
+      ) {
+        this.brand = "SyncroBit"
+      } else if (
+        data.payer == "14sKWeeYWQWrBSnLGq79uRQqZyw3Ldi7oBdxbF6a54QboTNBXDL"
+      ) {
+        this.brand = "Bobcat"
+      } else if (
+        data.payer == "14NBXJE5kAAZTMigY4dcjXSMG4CSqjYwvteQWwQsYhsu2TKN6AF"
+      ) {
+        this.brand = "SenseCAP"
+      } else if (
+        data.payer == "14fzfjFcHpDR1rTH8BNPvSi5dKBbgxaDnmsVPbCjuq9ENjpZbxh"
+      ) {
+        this.brand = "Helium Inc (old)"
+      } else if (
+        data.payer == "14eUfY1GsjK4WH6uZYoeagnFtigBKdvPruAXLmc5UsUMEDj3yib"
+      ) {
+        this.brand = "Linxdot"
+      } else if (
+        data.payer == "12zX4jgDGMbJgRwmCfRNGXBuphkQRqkUTcLzYHTQvd4Qgu8kiL4"
+      ) {
+        this.brand = "LongAP"
+      } else if (
+        data.payer == "13Mpg5hCNjSxHJvWjaanwJPBuTXu1d4g5pGvGBkqQe3F8mAwXhK"
+      ) {
+        this.brand = "Kerlink"
+      } else if (
+        data.payer == "14h2zf1gEr9NmvDb2U53qucLN2jLrKU1ECBoxGnSnQ6tiT6V2kM"
+      ) {
+        this.brand = "RAK wireless"
+      } else if (
+        data.payer == "13cbbZXzqwp6YMM5JvAu5T1TRhenENEJVU5Q8vpLhunQYE1Acpp"
+      ) {
+        this.brand = "COTX Networks"
+      } else if (
+        data.payer == "14iC6N1HkqUjH7WEChHVQhPqJ1hbWBKpZXZVeHHykCA7tNDYF2C"
+      ) {
+        this.brand = "Heltec Automation"
+      } else if (
+        data.payer == "13MS2kZHU4h6wp3tExgoHdDFjBsb9HB9JBvcbK9XmfNyJ7jqzVv"
+      ) {
+        this.brand = "Smart Mimic"
+      } else if (
+        data.payer == "134C7Hn3vhfBLQZex4PVwtxQ2uPJH97h9YD2bhzy1W2XhMJyY6d"
+      ) {
+        this.brand = "Pisces Miner"
+      } else if (
+        data.payer == "13LVwCqZEKLTVnf3sjGPY1NMkTE7fWtUVjmDfeuscMFgeK3f9pn"
+      ) {
+        this.brand = "DeWi Foundation"
+      } else if (
+        data.payer == "13y2EqUUzyQhQGtDSoXktz8m5jHNSiwAKLTYnHNxZq2uH5GGGym"
+      ) {
+        this.brand = "FreedomFi"
+      } else if (
+        data.payer == "13XuP2DjHEHVkKguDDZD2ev5AeqMLuJ8UQ44efEcDmVTnBcvc6F"
+      ) {
+        this.brand = "ClodPi"
+      } else if (
+        data.payer == "14go8hvEDnotWTyhYv6Hu5PTnRUAQzJqbB6dsDm1oThkCcZe9zd"
+      ) {
+        this.brand = "Controllino"
+      } else if (data.payer === data.owner) {
+        this.brand = "Data Only"
+      } else {
+        this.brand = "Unknown"
+      }
 
       // Status:
       if (
@@ -218,12 +344,55 @@ export default {
       await this.getRewards(this.item)
       await this.getDailyRewards(this.item)
     },
+    // async test() {
+    //   const res = await fetch(
+    //     "https://api.helium.io/v1/hotspots"
+    //   )
+    //   let { data, cursor } = await res.json()
+    //   const knownMakers = [
+    //     "13daGGWvDQyTyHFDCPz8zDSVTWgPNNfJ4oh31Teec4TRWfjMx53",
+    //     "13ENbEQPAvytjLnqavnbSAzurhGoCSNkGECMx7eHHDAfEaDirdY",
+    //     "14rb2UcfS9U89QmKswpZpjRCUVCVu1haSyqyGY486EvsYtvdJmR",
+    //     "13Zni1he7KY9pUmkXMhEhTwfUpL9AcEV1m2UbbvFsrU9QPTMgE3",
+    //     "14sKWeeYWQWrBSnLGq79uRQqZyw3Ldi7oBdxbF6a54QboTNBXDL",
+    //     "14NBXJE5kAAZTMigY4dcjXSMG4CSqjYwvteQWwQsYhsu2TKN6AF",
+    //     "12zX4jgDGMbJgRwmCfRNGXBuphkQRqkUTcLzYHTQvd4Qgu8kiL4",
+    //     "13cbbZXzqwp6YMM5JvAu5T1TRhenENEJVU5Q8vpLhunQYE1Acpp",
+    //     "14h2zf1gEr9NmvDb2U53qucLN2jLrKU1ECBoxGnSnQ6tiT6V2kM",
+    //     "14iC6N1HkqUjH7WEChHVQhPqJ1hbWBKpZXZVeHHykCA7tNDYF2C",
+    //     "13MS2kZHU4h6wp3tExgoHdDFjBsb9HB9JBvcbK9XmfNyJ7jqzVv",
+    //     "134C7Hn3vhfBLQZex4PVwtxQ2uPJH97h9YD2bhzy1W2XhMJyY6d",
+    //     "14eUfY1GsjK4WH6uZYoeagnFtigBKdvPruAXLmc5UsUMEDj3yib",
+    //     "13Mpg5hCNjSxHJvWjaanwJPBuTXu1d4g5pGvGBkqQe3F8mAwXhK",
+    //     "13y2EqUUzyQhQGtDSoXktz8m5jHNSiwAKLTYnHNxZq2uH5GGGym",
+    //     "13XuP2DjHEHVkKguDDZD2ev5AeqMLuJ8UQ44efEcDmVTnBcvc6F",
+    //     "13LVwCqZEKLTVnf3sjGPY1NMkTE7fWtUVjmDfeuscMFgeK3f9pn",
+    //   ]
+    //   let maker
+    //   data.map((e) => {
+    //     if (!knownMakers.includes(e.payer)) {
+    //       if (
+    //         e.payer == "14fzfjFcHpDR1rTH8BNPvSi5dKBbgxaDnmsVPbCjuq9ENjpZbxh"
+    //       ) {
+    //         maker = "Helium Old"
+    //       } else if (e.payer == e.owner) {
+    //         maker = "Data-Only"
+    //       } else {
+    //         maker = "Unknown"
+    //       }
+    //       console.log(maker + ": " + e.address)
+    //     }
+    //   })
+    //   console.log(cursor)
+    // },
   },
   async created() {
     this.timer = setInterval(this.updateData, 600000)
     await this.updateData()
 
+    // Show when the rest is loaded
     this.loaded = true
+    // this.test()
   },
   beforeDestroy() {
     clearInterval(this.timer)
@@ -231,4 +400,15 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped></style>
+<style>
+.card:hover {
+  .brand-color {
+    @apply opacity-100;
+  }
+}
+.brand-name {
+  @apply absolute uppercase text-white font-extralight hidden group-hover:block left-3 top-0 bottom-0;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+}
+</style>

@@ -75,5 +75,15 @@ export default {
   beforeUpdate() {
     this.itemRefs = []
   },
+  created() {
+    // Show brand
+    store.display = JSON.parse(localStorage.getItem("display"))
+    if (store.display.maker == undefined) {
+      store.display.maker = true // Set to 'true' by default if doesn't exist
+      localStorage.setItem("display", JSON.stringify(store.display))
+    } else {
+      store.display = JSON.parse(localStorage.getItem("display"))
+    }
+  },
 }
 </script>
