@@ -317,18 +317,15 @@ export default {
       this.hotspot.brandAddress = data.payer
 
       // Status
-      // // Check if miner is LongAP:
-      // if (data.payer == "12zX4jgDGMbJgRwmCfRNGXBuphkQRqkUTcLzYHTQvd4Qgu8kiL4") {
-      //   const longapRes = await fetch(
-      //     "https://status.longap.com/hotspot/status/" + address,
-      //     {
-      //       mode: "no-cors",
-      //     }
-      //   )
-      //   let {status} = await longapRes.json()
-      //   console.log(status)
-      // } else {
+      // Check if miner is LongAP:
+      // let longAP = "12zX4jgDGMbJgRwmCfRNGXBuphkQRqkUTcLzYHTQvd4Qgu8kiL4"
+      // let longapRes
 
+      // if (data.payer == longAP) {
+      //   longapRes = await getLongAPStatus(address)
+      //   console.log(longapRes)
+      //   // If not LongAP or failed:
+      // } else if (longapRes == "failed" || data.payer !== longAP) {
       this.hotspot.status = data.status.online
       if (
         data.status.listen_addrs &&

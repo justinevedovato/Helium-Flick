@@ -20,14 +20,16 @@
         "
         style="height: 68px"
       >
-        <div class="h-full relative group">
+        <Tooltip v-if="showMaker" class="w-2 h-full">
           <div
-            v-if="showMaker"
-            class="w-2 h-full opacity-60 brand-color"
+            class="h-full opacity-60 brand-color"
+            style="width: 7px"
             :class="brand.color"
           ></div>
-          <span class="brand-name whitespace-nowrap">{{ brand.name }}</span>
-        </div>
+          <template #tooltip>
+            <span class="whitespace-nowrap">{{ brand.name }}</span>
+          </template>
+        </Tooltip>
 
         <div class="flex flex-1 flex-col px-3">
           <div class="flex items-baseline">
@@ -53,8 +55,7 @@
           </div>
 
           <div class="flex w-full items-center mt-0.5">
-            <LoadingDots v-if="!location" />
-            <span class="text-sm inline flex-1">
+            <span class="text-sm inline flex-1 h-6">
               {{ location }}
             </span>
             <!-- <span
@@ -167,10 +168,6 @@ export default {
       // Brand:
       this.brand = getBrand(data.payer)
 
-      // if (id === data.owner) {
-      //   return "Data Only"
-      // }
-
       // Status:
       if (
         data.status.listen_addrs &&
@@ -252,47 +249,6 @@ export default {
       await this.getRewards(this.item)
       await this.getDailyRewards(this.item)
     },
-    // async test() {
-    //   const res = await fetch(
-    //     "https://api.helium.io/v1/hotspots"
-    //   )
-    //   let { data, cursor } = await res.json()
-    //   const knownMakers = [
-    //     "13daGGWvDQyTyHFDCPz8zDSVTWgPNNfJ4oh31Teec4TRWfjMx53",
-    //     "13ENbEQPAvytjLnqavnbSAzurhGoCSNkGECMx7eHHDAfEaDirdY",
-    //     "14rb2UcfS9U89QmKswpZpjRCUVCVu1haSyqyGY486EvsYtvdJmR",
-    //     "13Zni1he7KY9pUmkXMhEhTwfUpL9AcEV1m2UbbvFsrU9QPTMgE3",
-    //     "14sKWeeYWQWrBSnLGq79uRQqZyw3Ldi7oBdxbF6a54QboTNBXDL",
-    //     "14NBXJE5kAAZTMigY4dcjXSMG4CSqjYwvteQWwQsYhsu2TKN6AF",
-    //     "12zX4jgDGMbJgRwmCfRNGXBuphkQRqkUTcLzYHTQvd4Qgu8kiL4",
-    //     "13cbbZXzqwp6YMM5JvAu5T1TRhenENEJVU5Q8vpLhunQYE1Acpp",
-    //     "14h2zf1gEr9NmvDb2U53qucLN2jLrKU1ECBoxGnSnQ6tiT6V2kM",
-    //     "14iC6N1HkqUjH7WEChHVQhPqJ1hbWBKpZXZVeHHykCA7tNDYF2C",
-    //     "13MS2kZHU4h6wp3tExgoHdDFjBsb9HB9JBvcbK9XmfNyJ7jqzVv",
-    //     "134C7Hn3vhfBLQZex4PVwtxQ2uPJH97h9YD2bhzy1W2XhMJyY6d",
-    //     "14eUfY1GsjK4WH6uZYoeagnFtigBKdvPruAXLmc5UsUMEDj3yib",
-    //     "13Mpg5hCNjSxHJvWjaanwJPBuTXu1d4g5pGvGBkqQe3F8mAwXhK",
-    //     "13y2EqUUzyQhQGtDSoXktz8m5jHNSiwAKLTYnHNxZq2uH5GGGym",
-    //     "13XuP2DjHEHVkKguDDZD2ev5AeqMLuJ8UQ44efEcDmVTnBcvc6F",
-    //     "13LVwCqZEKLTVnf3sjGPY1NMkTE7fWtUVjmDfeuscMFgeK3f9pn",
-    //   ]
-    //   let maker
-    //   data.map((e) => {
-    //     if (!knownMakers.includes(e.payer)) {
-    //       if (
-    //         e.payer == "14fzfjFcHpDR1rTH8BNPvSi5dKBbgxaDnmsVPbCjuq9ENjpZbxh"
-    //       ) {
-    //         maker = "Helium Old"
-    //       } else if (e.payer == e.owner) {
-    //         maker = "Data-Only"
-    //       } else {
-    //         maker = "Unknown"
-    //       }
-    //       console.log(maker + ": " + e.address)
-    //     }
-    //   })
-    //   console.log(cursor)
-    // },
   },
   async created() {
     this.timer = setInterval(this.updateData, 600000)
@@ -300,7 +256,6 @@ export default {
 
     // Show when the rest is loaded
     this.loaded = true
-    // this.test()
   },
   beforeDestroy() {
     clearInterval(this.timer)
@@ -313,10 +268,5 @@ export default {
   .brand-color {
     @apply opacity-100;
   }
-}
-.brand-name {
-  @apply absolute uppercase text-white font-extralight hidden group-hover:block left-3 top-0 bottom-0;
-  font-size: 10px;
-  letter-spacing: 1.5px;
 }
 </style>

@@ -23,3 +23,21 @@ contextBridge.exposeInMainWorld("hideWindow", () => {
 contextBridge.exposeInMainWorld("openExternalUrl", (url) => {
   shell.openExternal(url)
 })
+
+// To check status info for LongAP devices
+// contextBridge.exposeInMainWorld("getLongAPStatus", (address) => {
+//   fetch("https://status.longap.com/hotspot/status/" + address, {
+//     mode: "no-cors",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//   })
+//     .then((res) => {
+//       console.log(res.json())
+//       // return res.json()
+//     })
+//     .catch((e) => {
+//       console.log(e)
+//       return "failed"
+//     })
+// })

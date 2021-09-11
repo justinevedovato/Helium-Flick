@@ -180,13 +180,11 @@ export default {
       message: "",
       loaded: false,
       drag: false,
+      addresses: store.addresses,
     }
   },
 
   computed: {
-    addresses() {
-      return store.addresses
-    },
     showMaker() {
       return store.display.maker
     },
