@@ -61,6 +61,9 @@ export default {
     addresses() {
       return store.addresses
     },
+    showMaker() {
+      return store.display.maker
+    },
   },
   methods: {
     refreshHotspots() {
@@ -75,15 +78,6 @@ export default {
   beforeUpdate() {
     this.itemRefs = []
   },
-  created() {
-    // Show brand
-    store.display = JSON.parse(localStorage.getItem("display"))
-    console.log(store.display)
-    if (store.display == undefined) {
-      this.showMaker = true
-      store.display = { maker: true } // Set to 'true' by default if doesn't exist
-      localStorage.setItem("display", JSON.stringify(store.display))
-    }
-  },
+  created() {},
 }
 </script>

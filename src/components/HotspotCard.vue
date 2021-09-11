@@ -160,7 +160,6 @@ export default {
       loaded: false,
       timer: "",
       brand: "",
-      showMaker: store.display.maker,
     }
   },
 
@@ -173,6 +172,9 @@ export default {
       if (n.length > 29) {
         return n.slice(0, 28) + "..."
       } else return n
+    },
+    showMaker() {
+      return store.display.maker
     },
   },
 

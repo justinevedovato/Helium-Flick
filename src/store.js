@@ -4,5 +4,7 @@ export default reactive({
   addresses: [],
   hotspots: {},
   versions: {},
-  display: {},
+  display: {
+    maker: true,
+  },
 })

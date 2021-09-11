@@ -176,19 +176,25 @@ export default {
   data() {
     return {
       address: "",
-      addresses: store.addresses,
       user: "",
       message: "",
       loaded: false,
       drag: false,
-      showMaker: store.display.maker,
     }
+  },
+
+  computed: {
+    addresses() {
+      return store.addresses
+    },
+    showMaker() {
+      return store.display.maker
+    },
   },
 
   methods: {
     toggle() {
-      this.showMaker = !this.showMaker
-      store.display.maker = this.showMaker
+      store.display.maker = !store.display.maker
       localStorage.setItem("display", JSON.stringify(store.display))
     },
     saveNewList() {
@@ -255,19 +261,6 @@ export default {
       store.addresses = []
       this.addresses = []
     },
-  },
-  created() {
-    // Show brand
-    store.display = JSON.parse(localStorage.getItem("display"))
-    console.log(store.display)
-
-    if (store.display == undefined) {
-      this.showMaker = true
-      store.display = { maker: true } // Set to 'true' by default if doesn't exist
-      localStorage.setItem("display", JSON.stringify(store.display))
-    } else {
-      this.showMaker = store.display.maker
-    }
   },
 }
 </script>
