@@ -259,12 +259,13 @@ export default {
   created() {
     // Show brand
     store.display = JSON.parse(localStorage.getItem("display"))
-    if (!store.display) {
+    console.log(store.display)
+
+    if (store.display == undefined) {
       this.showMaker = true
-      store.display.maker = true // Set to 'true' by default if doesn't exist
+      store.display = { maker: true } // Set to 'true' by default if doesn't exist
       localStorage.setItem("display", JSON.stringify(store.display))
     } else {
-      store.display = JSON.parse(localStorage.getItem("display"))
       this.showMaker = store.display.maker
     }
   },
@@ -272,12 +273,6 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
-/* #togglemaker {
-  input:active ~ .dot {
-    transform: translateX(100%);
-    background-color: #48bb78;
-  }
-} */
 .add-hotspots {
   input {
     @apply w-full h-8 rounded-l-md bg-gray-800 border border-gray-700 focus:border-indigo-700 focus:outline-none;
