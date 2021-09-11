@@ -30,32 +30,8 @@
               absolute
             "
           >
-            <div
-              class="h-2 w-2 mr-2"
-              :class="{
-                'bg-seagreen': hotspot.brand == 'SenseCAP',
-                'bg-blumine': hotspot.brand == 'LongAP',
-                'bg-red-800': hotspot.brand == 'Bobcat',
-                'bg-black': hotspot.brand == 'Nebra',
-                'bg-purple-800': hotspot.brand == 'Helium Inc',
-                'bg-indigo-900': hotspot.brand == 'Helium Inc (old)',
-                'bg-yellow-600': hotspot.brand == 'Cal-Chip',
-                'bg-purple-500': hotspot.brand == 'SyncroBit',
-                'bg-pink-700': hotspot.brand == 'Linxdot',
-                'bg-yellow-500': hotspot.brand == 'Kerlink',
-                'bg-red-600': hotspot.brand == 'RAK wireless',
-                'bg-green-400': hotspot.brand == 'COTX Networks',
-                'bg-indigo-700': hotspot.brand == 'Heltec Automation',
-                'bg-pink-500': hotspot.brand == 'Smart Mimic',
-                'bg-green-300': hotspot.brand == 'Pisces Miner',
-                'bg-gray-600': hotspot.brand == 'DeWi Foundation',
-                'bg-blue-800': hotspot.brand == 'FreedomFi',
-                'bg-eastblue': hotspot.brand == 'ClodPi',
-                'bg-corn': hotspot.brand == 'Controllino',
-                'bg-white': hotspot.brand == 'Data Only',
-              }"
-            ></div>
-            <span>{{ hotspot.brand }}</span>
+            <div class="h-2 w-2 mr-2" :class="hotspot.brand.color"></div>
+            <span>{{ hotspot.brand.name }}</span>
           </a>
         </div>
 
@@ -294,6 +270,7 @@ import MonthlyChart from "~/components/MonthlyChart.vue"
 import prettyms from "pretty-ms"
 import LoadingDots from "~/components/LoadingDots.vue"
 import Tooltip from "~/components/Tooltip.vue"
+import { getBrand } from "~/utils"
 
 export default {
   components: { Activity, MonthlyChart, LoadingDots, Tooltip },
@@ -309,7 +286,7 @@ export default {
         week: "",
         month: "",
         monthAll: [],
-        brand: "",
+        brand: {},
         brandAddress: "",
       },
       activity: [],
@@ -340,7 +317,7 @@ export default {
       this.hotspot.brandAddress = data.payer
 
       // Status
-      // Check if LongAP
+      // // Check if miner is LongAP:
       // if (data.payer == "12zX4jgDGMbJgRwmCfRNGXBuphkQRqkUTcLzYHTQvd4Qgu8kiL4") {
       //   const longapRes = await fetch(
       //     "https://status.longap.com/hotspot/status/" + address,
@@ -348,8 +325,8 @@ export default {
       //       mode: "no-cors",
       //     }
       //   )
-      //   let longapData = await longapRes.json()
-      //   console.log(longapData)
+      //   let {status} = await longapRes.json()
+      //   console.log(status)
       // } else {
 
       this.hotspot.status = data.status.online
@@ -369,85 +346,7 @@ export default {
       // }
 
       // Brand:
-      if (data.payer == "13daGGWvDQyTyHFDCPz8zDSVTWgPNNfJ4oh31Teec4TRWfjMx53") {
-        this.hotspot.brand = "Helium Inc"
-      } else if (
-        data.payer == "13ENbEQPAvytjLnqavnbSAzurhGoCSNkGECMx7eHHDAfEaDirdY"
-      ) {
-        this.hotspot.brand = "Cal-Chip"
-      } else if (
-        data.payer == "13Zni1he7KY9pUmkXMhEhTwfUpL9AcEV1m2UbbvFsrU9QPTMgE3"
-      ) {
-        this.hotspot.brand = "Nebra"
-      } else if (
-        data.payer == "14rb2UcfS9U89QmKswpZpjRCUVCVu1haSyqyGY486EvsYtvdJmR"
-      ) {
-        this.hotspot.brand = "SyncroBit"
-      } else if (
-        data.payer == "14sKWeeYWQWrBSnLGq79uRQqZyw3Ldi7oBdxbF6a54QboTNBXDL"
-      ) {
-        this.hotspot.brand = "Bobcat"
-      } else if (
-        data.payer == "14NBXJE5kAAZTMigY4dcjXSMG4CSqjYwvteQWwQsYhsu2TKN6AF"
-      ) {
-        this.hotspot.brand = "SenseCAP"
-      } else if (
-        data.payer == "14fzfjFcHpDR1rTH8BNPvSi5dKBbgxaDnmsVPbCjuq9ENjpZbxh"
-      ) {
-        this.hotspot.brand = "Helium Inc (old)"
-      } else if (
-        data.payer == "14eUfY1GsjK4WH6uZYoeagnFtigBKdvPruAXLmc5UsUMEDj3yib"
-      ) {
-        this.hotspot.brand = "Linxdot"
-      } else if (
-        data.payer == "12zX4jgDGMbJgRwmCfRNGXBuphkQRqkUTcLzYHTQvd4Qgu8kiL4"
-      ) {
-        this.hotspot.brand = "LongAP"
-      } else if (
-        data.payer == "13Mpg5hCNjSxHJvWjaanwJPBuTXu1d4g5pGvGBkqQe3F8mAwXhK"
-      ) {
-        this.hotspot.brand = "Kerlink"
-      } else if (
-        data.payer == "14h2zf1gEr9NmvDb2U53qucLN2jLrKU1ECBoxGnSnQ6tiT6V2kM"
-      ) {
-        this.hotspot.brand = "RAK wireless"
-      } else if (
-        data.payer == "13cbbZXzqwp6YMM5JvAu5T1TRhenENEJVU5Q8vpLhunQYE1Acpp"
-      ) {
-        this.hotspot.brand = "COTX Networks"
-      } else if (
-        data.payer == "14iC6N1HkqUjH7WEChHVQhPqJ1hbWBKpZXZVeHHykCA7tNDYF2C"
-      ) {
-        this.hotspot.brand = "Heltec Automation"
-      } else if (
-        data.payer == "13MS2kZHU4h6wp3tExgoHdDFjBsb9HB9JBvcbK9XmfNyJ7jqzVv"
-      ) {
-        this.hotspot.brand = "Smart Mimic"
-      } else if (
-        data.payer == "134C7Hn3vhfBLQZex4PVwtxQ2uPJH97h9YD2bhzy1W2XhMJyY6d"
-      ) {
-        this.hotspot.brand = "Pisces Miner"
-      } else if (
-        data.payer == "13LVwCqZEKLTVnf3sjGPY1NMkTE7fWtUVjmDfeuscMFgeK3f9pn"
-      ) {
-        this.hotspot.brand = "DeWi Foundation"
-      } else if (
-        data.payer == "13y2EqUUzyQhQGtDSoXktz8m5jHNSiwAKLTYnHNxZq2uH5GGGym"
-      ) {
-        this.hotspot.brand = "FreedomFi"
-      } else if (
-        data.payer == "13XuP2DjHEHVkKguDDZD2ev5AeqMLuJ8UQ44efEcDmVTnBcvc6F"
-      ) {
-        this.hotspot.brand = "ClodPi"
-      } else if (
-        data.payer == "14go8hvEDnotWTyhYv6Hu5PTnRUAQzJqbB6dsDm1oThkCcZe9zd"
-      ) {
-        this.hotspot.brand = "Controllino"
-      } else if (data.payer === data.owner) {
-        this.hotspot.brand = "Data Only"
-      } else {
-        this.hotspot.brand = "Unknown"
-      }
+      this.hotspot.brand = getBrand(data.payer)
     },
 
     async getActivity(address) {
