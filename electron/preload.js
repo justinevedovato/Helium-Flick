@@ -2,6 +2,7 @@
 // It has the same sandbox as a Chrome extension.
 
 const { contextBridge, ipcRenderer, shell } = require("electron")
+const got = require("got")
 
 window.addEventListener("DOMContentLoaded", () => {
   const replaceText = (selector, text) => {
@@ -25,19 +26,14 @@ contextBridge.exposeInMainWorld("openExternalUrl", (url) => {
 })
 
 // To check status info for LongAP devices
-// contextBridge.exposeInMainWorld("getLongAPStatus", (address) => {
-//   fetch("https://status.longap.com/hotspot/status/" + address, {
-//     mode: "no-cors",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//   })
-//     .then((res) => {
-//       console.log(res.json())
-//       // return res.json()
-//     })
-//     .catch((e) => {
-//       console.log(e)
-//       return "failed"
-//     })
-// })
+contextBridge.exposeInMainWorld("getLongAPStatus", async (address) => {
+  try {
+    let res = await got(
+      "https://status.longap.com/hotspot/status/" + address
+    ).json()
+    return res
+  } catch (e) {
+    console.error(e)
+    return "failed"
+  }
+})

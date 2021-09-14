@@ -163,8 +163,8 @@
 
     <!-- Divider: -->
     <div
-      class="w-52 bg-gradient-to-r from-gray-900 to-gray-800 ml-auto my-0.5"
-      style="height: 1px"
+      class="w-52 bg-gradient-to-r from-gray-900 to-gray-800 ml-auto"
+      style="height: 1px; margin-top: 1px; margin-bottom: 1px"
     ></div>
   </div>
 </template>

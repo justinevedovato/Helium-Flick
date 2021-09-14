@@ -34,13 +34,20 @@
           rounded-md
         "
       >
-        <span class="underline">Warning</span>: Please note that the status
-        information given by Helium API is very likely <b>outdated</b>. If your
-        hotspot shows "syncing" but you are seeing activity happening, then it
-        is actually online.<br />Those bullets are shown as an indicator, but if
-        you have a dedicated dashboard, your status info will be much more
-        reliable there.<br />If you see different status in several places, then
-        you should always trust your dashboard before this app, or the Explorer.
+        <span class="underline">Warning</span>: Please note that depending on
+        your miner*, the status information given by Helium API is very likely
+        <b>outdated</b>. If your hotspot shows "syncing" but you are seeing
+        activity happening, then it is actually online.<br />Those bullets are
+        shown as an indicator, but if you have a dedicated dashboard, your
+        status info will be much more reliable there.<br />If you see different
+        status in several places, then you should always trust your dashboard
+        before this app, or the Explorer.
+      </p>
+
+      <p class="text-xs text-gray-400 text-justify py-4 px-2 rounded-md">
+        * If you own a LongAP device, the status info comes from their own API,
+        which gives you more accurate data. In case it fails, it falls back to
+        Helium API.
       </p>
 
       <h3>

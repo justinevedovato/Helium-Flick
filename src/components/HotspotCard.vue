@@ -15,10 +15,10 @@
           hover:bg-gray-800
           mx-2
           rounded-md
+          h-16
           overflow-hidden
           items-center
         "
-        style="height: 68px"
       >
         <Tooltip v-if="showMaker" class="w-2 h-full">
           <div
@@ -33,7 +33,9 @@
 
         <div class="flex flex-1 flex-col px-3">
           <div class="flex items-baseline">
-            <p class="text-white inline">{{ name }}</p>
+            <p class="text-white inline">
+              {{ name }}
+            </p>
             <Tooltip inline class="ml-2">
               <span
                 v-if="loaded"
@@ -151,7 +153,7 @@ export default {
     name() {
       let n = animalHash(this.item)
       if (n.length > 29) {
-        return n.slice(0, 28) + "..."
+        return n.slice(0, 25) + "..."
       } else return n
     },
     showMaker() {
@@ -164,24 +166,41 @@ export default {
       const res = await fetch("https://api.helium.io/v1/hotspots/" + address)
       let { data } = await res.json()
       this.timestampAdded = data.timestamp_added.split(".")[0] + "Z"
-      this.status = data.status.online
+
       // Brand:
       this.brand = getBrand(data.payer)
 
       // Status:
-      if (
-        data.status.listen_addrs &&
-        data.status.listen_addrs[0] &&
-        data.status.listen_addrs[0].includes("p2p")
-      ) {
-        this.relayed = true
+      // Check if miner is LongAP:
+      let longAP = "12zX4jgDGMbJgRwmCfRNGXBuphkQRqkUTcLzYHTQvd4Qgu8kiL4"
+      let response
+
+      if (data.payer == longAP) {
+        response = await getLongAPStatus(address)
+        this.status = response[0].status
+        if (response[0] && response[0].miner && response[0].miner.natType) {
+          if (!["none", "static"].includes(response[0].miner.natType)) {
+            this.relayed = true
+          }
+        }
       }
-      if (
-        data.block - data.status.height > 500 &&
-        data.status.online != "offline"
-      ) {
-        this.status = "syncing"
-        this.blocksLeft = data.block - data.status.height + " left"
+      // If not LongAP or if API call has failed:
+      if (response == "failed" || data.payer !== longAP) {
+        this.status = data.status.online
+        if (
+          data.status.listen_addrs &&
+          data.status.listen_addrs[0] &&
+          data.status.listen_addrs[0].includes("p2p")
+        ) {
+          this.relayed = true
+        }
+        if (
+          data.block - data.status.height > 500 &&
+          data.status.online != "offline"
+        ) {
+          this.status = "syncing"
+          // this.blocksLeft = data.block - data.status.height + " left"
+        }
       }
 
       // Location:

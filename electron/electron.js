@@ -129,7 +129,7 @@ app.whenReady().then(() => {
       win.show()
     }
   })
-  tray.addListener('right-click', () => {
+  tray.addListener("right-click", () => {
     tray.popUpContextMenu(contextMenu)
   })
   createWindow()

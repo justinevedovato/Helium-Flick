@@ -31,7 +31,10 @@
             "
           >
             <div class="h-2 w-2 mr-2" :class="hotspot.brand.color"></div>
-            <span>{{ hotspot.brand.name }}</span>
+            <span>{{ hotspot.brand.name }} </span>
+            <!-- <span v-if="hotspot.model" class="ml-2 text-gray-500">
+              ({{ hotspot.model }})</span
+            > -->
           </a>
         </div>
 
@@ -296,7 +299,8 @@ export default {
       loaded: false,
       dropdownOpen: true,
       timestampAdded: "",
-      timer: "",
+      timerPage: "",
+      timerLatest: "",
     }
   },
   computed: {
@@ -318,29 +322,34 @@ export default {
 
       // Status
       // Check if miner is LongAP:
-      // let longAP = "12zX4jgDGMbJgRwmCfRNGXBuphkQRqkUTcLzYHTQvd4Qgu8kiL4"
-      // let longapRes
-
-      // if (data.payer == longAP) {
-      //   longapRes = await getLongAPStatus(address)
-      //   console.log(longapRes)
-      //   // If not LongAP or failed:
-      // } else if (longapRes == "failed" || data.payer !== longAP) {
-      this.hotspot.status = data.status.online
-      if (
-        data.status.listen_addrs &&
-        data.status.listen_addrs[0] &&
-        data.status.listen_addrs[0].includes("p2p")
-      ) {
-        this.hotspot.relayed = true
+      let longAP = "12zX4jgDGMbJgRwmCfRNGXBuphkQRqkUTcLzYHTQvd4Qgu8kiL4"
+      let response
+      if (data.payer == longAP) {
+        response = await getLongAPStatus(address)
+        this.hotspot.status = response[0].status
+        if (response[0].miner && response[0].miner.natType) {
+          if (!["none", "static"].includes(response[0].miner.natType)) {
+            this.hotspot.relayed = true
+          }
+        }
       }
-      if (
-        data.block - data.status.height > 500 &&
-        data.status.online != "offline"
-      ) {
-        this.hotspot.status = "syncing"
+      // If not LongAP or if API call has failed:
+      if (response == "failed" || data.payer !== longAP) {
+        this.hotspot.status = data.status.online
+        if (
+          data.status.listen_addrs &&
+          data.status.listen_addrs[0] &&
+          data.status.listen_addrs[0].includes("p2p")
+        ) {
+          this.hotspot.relayed = true
+        }
+        if (
+          data.block - data.status.height > 500 &&
+          data.status.online != "offline"
+        ) {
+          this.hotspot.status = "syncing"
+        }
       }
-      // }
 
       // Brand:
       this.hotspot.brand = getBrand(data.payer)
@@ -367,8 +376,11 @@ export default {
       }
 
       this.sortByDate()
+      this.getLatestTime()
+    },
 
-      // Get latest activity time:
+    // Get latest activity time:
+    getLatestTime() {
       if (this.activity[0]) {
         let latest = this.activity[0].time * 1000
         this.hotspot.lastUpdated =
@@ -479,7 +491,8 @@ export default {
     },
 
     async reload() {
-      clearInterval(this.timer)
+      clearInterval(this.timerPage)
+      clearInterval(this.timerLatest)
       this.loaded = false
       await this.updateData()
       this.loaded = true
@@ -496,14 +509,15 @@ export default {
     },
   },
   async created() {
-    this.timer = setInterval(this.updateData, 600000)
-
     await this.updateData()
 
+    this.timerPage = setInterval(this.updateData, 600000) // Every 10 minutes
+    this.timerLatest = setInterval(this.getLatestTime, 30000) // Every 30 seconds
     this.loaded = true
   },
   beforeDestroy() {
-    clearInterval(this.timer)
+    clearInterval(this.timerPage)
+    clearInterval(this.timerLatest)
   },
 }
 </script>

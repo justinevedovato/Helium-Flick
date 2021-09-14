@@ -1,9 +1,7 @@
 <template>
   <div class="flex flex-col flex-1 overflow-y-hidden">
+    <h2 class="uppercase text-gray-300 text-center my-2">Manage my Hotspots</h2>
     <div class="flex flex-col">
-      <h2 class="uppercase text-gray-300 text-center my-2">
-        Manage my Hotspots
-      </h2>
       <div class="w-10/12 mx-auto text-sm text-gray-300 my-4 flex">
         <div
           @click="toggle"
@@ -96,10 +94,9 @@
           cursor-pointer
           mx-auto
           text-sm text-center
-          py-1.5
-          px-2.5
-          mt-3
-          mb-4
+          py-1
+          px-2
+          my-3
           rounded-md
           hover:bg-red-900
         "
@@ -180,13 +177,21 @@ export default {
       message: "",
       loaded: false,
       drag: false,
-      addresses: store.addresses,
     }
   },
 
   computed: {
     showMaker() {
       return store.display.maker
+    },
+    addresses: {
+      // When using with v-model:
+      get() {
+        return store.addresses
+      },
+      set(value) {
+        store.addresses = value
+      },
     },
   },
 
@@ -266,7 +271,7 @@ export default {
 <style lang="postcss" scoped>
 .add-hotspots {
   input {
-    @apply w-full h-8 rounded-l-md bg-gray-800 border border-gray-700 focus:border-indigo-700 focus:outline-none;
+    @apply w-full h-7 rounded-l-md bg-gray-800 border border-gray-700 focus:border-indigo-700 focus:outline-none;
   }
 }
 

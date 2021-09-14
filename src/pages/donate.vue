@@ -21,8 +21,17 @@
       <p>
         <b>HeliumFlick</b> is open source and free to use.<br />
         If you want to support this project, and have some HNT to spare, here is
-        the QR code to my HNT wallet, that you can use with your
-        <b>Helium Hotspot</b> mobile app.
+        the QR code to
+        <a
+          href="#"
+          @click.prevent="
+            openExternalUrl(
+              'https://explorer.helium.com/accounts/149kQ47ptZDkajLCsTg3AEX3G6qgaLBj18NBLcokjA9i4KznBVo'
+            )
+          "
+          class="text-blue-500 underline hover:text-white"
+          >my HNT wallet</a
+        >, that you can use with your mobile <b>Helium App</b>.
       </p>
 
       <QRCodeVue3
@@ -46,7 +55,7 @@
         }"
         class="mx-auto py-1"
       />
-      <p>Any tip will be greatly appreciated!</p>
+      <p>Any tip is greatly appreciated, <br />thank you for your support!</p>
     </div>
   </perfect-scrollbar>
 </template>
@@ -56,6 +65,9 @@ import QRCodeVue3 from "qrcode-vue3"
 
 export default {
   components: { QRCodeVue3 },
+  methods: {
+    openExternalUrl,
+  },
 }
 </script>
 
