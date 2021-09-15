@@ -6,6 +6,9 @@ Helium-Flick is a desktop application for Helium hotspot owners, in the shape of
 
 [Download here](https://github.com/justinevedovato/Helium-Flick/releases/latest)
 
+Note: This application isn't signed, so when you start it for the first time, it will be blocked and you will have to click on "More info" and "Run anyway".
+For Mac users, you will have to go to System Preferences -> Security & Privacy and click "Open anyway".
+
 ## How to use
 
 Once your app is started, go to the Settings page.
