@@ -35,7 +35,7 @@
     "autoprefixer": "^10.2.6",
     "concurrently": "^6.2.1",
     "cross-env": "^7.0.3",
-    "electron": "^13.1.8",
+    "electron": "^13.5.1",
     "electron-builder": "^22.11.7",
     "postcss": "^8.3.5",
     "postcss-nested": "^5.0.6",
