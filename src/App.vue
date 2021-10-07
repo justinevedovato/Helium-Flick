@@ -51,16 +51,16 @@
 </template>
 
 <script>
-import store from "./store.js"
-import { version } from "../package.json"
-import axios from "axios"
+import store from './store.js'
+import { version } from '../package.json'
+import axios from 'axios'
 
 export default {
   data() {
     return {
-      newVersion: "",
+      newVersion: '',
       updateReady: false,
-      timer: "",
+      timer: '',
     }
   },
   methods: {
@@ -70,29 +70,29 @@ export default {
     async getNewRelease() {
       try {
         const res = await axios.get(
-          "https://api.github.com/repos/justinevedovato/Helium-Flick/releases/latest"
+          'https://api.github.com/repos/justinevedovato/Helium-Flick/releases/latest'
         )
-        store.versions = { new: res.data.tag_name, current: "v" + version }
+        store.versions = { new: res.data.tag_name, current: 'v' + version }
 
         if (store.versions.current !== store.versions.new) {
           this.updateReady = true
         }
       } catch (err) {
-        if (err.code === "ENOTFOUND") {
-          throw new Error("Network error.")
+        if (err.code === 'ENOTFOUND') {
+          throw new Error('Network error.')
         } else if (err.response && err.response.status === 404) {
-          throw new Error("Could not find a release.")
+          throw new Error('Could not find a release.')
         }
         throw new Error(err)
       }
     },
   },
   created() {
-    const allHotspots = JSON.parse(localStorage.getItem("addresses"))
+    const allHotspots = JSON.parse(localStorage.getItem('addresses'))
     store.addresses = allHotspots || []
 
     // Show brand
-    const display = JSON.parse(localStorage.getItem("display"))
+    const display = JSON.parse(localStorage.getItem('display'))
     if (display) {
       // Get default from the store, but keep user's changed values:
       store.display = Object.assign({}, store.display, display)
@@ -101,7 +101,7 @@ export default {
     this.timer = setInterval(this.getNewRelease, 3600000) // Every hour
     this.getNewRelease()
   },
-  beforeDestroy() {
+  beforeUnmount() {
     clearInterval(this.timer)
   },
 }
@@ -114,7 +114,7 @@ export default {
 }
 .navbar::after {
   @apply w-full absolute -bottom-1 bg-gradient-to-r from-gray-700 to-gray-900;
-  content: "";
+  content: '';
   height: 1px;
 }
 

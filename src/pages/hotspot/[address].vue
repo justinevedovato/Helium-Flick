@@ -267,87 +267,87 @@
 </template>
 
 <script>
-import animalHash from "angry-purple-tiger"
-import Activity from "~/components/Activity.vue"
-import MonthlyChart from "~/components/MonthlyChart.vue"
-import prettyms from "pretty-ms"
-import LoadingDots from "~/components/LoadingDots.vue"
-import Tooltip from "~/components/Tooltip.vue"
-import { getBrand } from "~/utils"
+import animalHash from 'angry-purple-tiger'
+import Activity from '~/components/Activity.vue'
+import MonthlyChart from '~/components/MonthlyChart.vue'
+import prettyms from 'pretty-ms'
+import LoadingDots from '~/components/LoadingDots.vue'
+import Tooltip from '~/components/Tooltip.vue'
+import { getBrand } from '~/utils'
 
 export default {
   components: { Activity, MonthlyChart, LoadingDots, Tooltip },
-  props: ["address"],
+  props: ['address'],
   data() {
     return {
       hotspot: {
-        status: "",
+        status: '',
         relayed: false,
-        lastUpdated: "",
-        rewardAmount: "",
-        today: "",
-        week: "",
-        month: "",
+        lastUpdated: '',
+        rewardAmount: '',
+        today: '',
+        week: '',
+        month: '',
         monthAll: [],
         brand: {},
-        brandAddress: "",
+        brandAddress: '',
       },
       activity: [],
       activity2: {},
       daysClosed: [],
-      nextCursor: "",
+      nextCursor: '',
       loaded: false,
       dropdownOpen: true,
-      timestampAdded: "",
-      timerPage: "",
-      timerLatest: "",
+      timestampAdded: '',
+      timerPage: '',
+      timerLatest: '',
     }
   },
   computed: {
     name() {
       let n = animalHash(this.address)
       if (n.length > 29) {
-        return n.slice(0, 28) + "..."
+        return n.slice(0, 28) + '...'
       } else return n
     },
   },
   methods: {
     openExternalUrl,
     async getHotspotInfos(address) {
-      const res = await fetch("https://api.helium.io/v1/hotspots/" + address)
+      const res = await fetch('https://api.helium.io/v1/hotspots/' + address)
       let { data } = await res.json()
 
-      this.timestampAdded = data.timestamp_added.split(".")[0] + "Z"
+      this.timestampAdded = data.timestamp_added.split('.')[0] + 'Z'
       this.hotspot.brandAddress = data.payer
 
       // Status
       // Check if miner is LongAP:
-      let longAP = "12zX4jgDGMbJgRwmCfRNGXBuphkQRqkUTcLzYHTQvd4Qgu8kiL4"
+      let longAP = '12zX4jgDGMbJgRwmCfRNGXBuphkQRqkUTcLzYHTQvd4Qgu8kiL4'
       let response
       if (data.payer == longAP) {
         response = await getLongAPStatus(address)
         this.hotspot.status = response[0].status
         if (response[0].miner && response[0].miner.natType) {
-          if (!["none", "static"].includes(response[0].miner.natType)) {
+          if (!['none', 'static'].includes(response[0].miner.natType)) {
             this.hotspot.relayed = true
           }
         }
       }
       // If not LongAP or if API call has failed:
-      if (response == "failed" || data.payer !== longAP) {
+      if (response == 'failed' || data.payer !== longAP) {
         this.hotspot.status = data.status.online
         if (
           data.status.listen_addrs &&
           data.status.listen_addrs[0] &&
-          data.status.listen_addrs[0].includes("p2p")
+          data.status.listen_addrs[0].includes('p2p')
         ) {
           this.hotspot.relayed = true
         }
         if (
           data.block - data.status.height > 500 &&
-          data.status.online != "offline"
+          data.status.online != 'offline'
         ) {
-          this.hotspot.status = "syncing"
+          this.hotspot.status = 'syncing'
         }
       }
 
@@ -357,16 +357,16 @@ export default {
 
     async getActivity(address) {
       const res = await fetch(
-        "https://api.helium.io/v1/hotspots/" + address + "/activity"
+        'https://api.helium.io/v1/hotspots/' + address + '/activity'
       )
       let { data, cursor } = await res.json()
       this.activity = data
 
       if (cursor) {
         const res2 = await fetch(
-          "https://api.helium.io/v1/hotspots/" +
+          'https://api.helium.io/v1/hotspots/' +
             address +
-            "/activity?cursor=" +
+            '/activity?cursor=' +
             cursor
         )
 
@@ -386,7 +386,7 @@ export default {
         this.hotspot.lastUpdated =
           prettyms(+new Date() - latest, {
             compact: true,
-          }) + " ago"
+          }) + ' ago'
       }
     },
 
@@ -394,9 +394,9 @@ export default {
       this.loaded = false
       try {
         const res = await fetch(
-          "https://api.helium.io/v1/hotspots/" +
+          'https://api.helium.io/v1/hotspots/' +
             this.address +
-            "/activity?cursor=" +
+            '/activity?cursor=' +
             this.nextCursor
         )
         let { data, cursor } = await res.json()
@@ -416,8 +416,8 @@ export default {
         const date = new Date(item.time * 1000)
 
         const dateString = date.toLocaleDateString(navigator.language, {
-          month: "short",
-          day: "numeric",
+          month: 'short',
+          day: 'numeric',
         })
         acc[dateString] = acc[dateString] || {}
         acc[dateString].items = acc[dateString].items || []
@@ -438,14 +438,14 @@ export default {
 
     async getTotalRewards(minTime) {
       const res = await fetch(
-        "https://api.helium.io/v1/hotspots/" +
+        'https://api.helium.io/v1/hotspots/' +
           this.address +
-          "/rewards/sum?min_time=" +
+          '/rewards/sum?min_time=' +
           minTime
       )
 
       let { data } = await res.json()
-      this.hotspot.rewardAmount = data.total.toFixed("2") + " HNT"
+      this.hotspot.rewardAmount = data.total.toFixed('2') + ' HNT'
       return data
     },
 
@@ -465,14 +465,14 @@ export default {
         )
       )
       let params = new URLSearchParams({
-        bucket: "day",
-        min_time: "-30 day",
+        bucket: 'day',
+        min_time: '-30 day',
         max_time: UTCTime.toISOString(),
       })
       const res = await fetch(
-        "https://api.helium.io/v1/hotspots/" +
+        'https://api.helium.io/v1/hotspots/' +
           this.address +
-          "/rewards/sum?" +
+          '/rewards/sum?' +
           params.toString()
       )
       let { data } = await res.json()
@@ -480,14 +480,14 @@ export default {
       this.hotspot.monthAll = data.map((r) => r.total).reverse() // For the graph
 
       // For Day / Week / Month totals:
-      this.hotspot.today = data[0].total.toFixed("2")
+      this.hotspot.today = data[0].total.toFixed('2')
       this.hotspot.week = data
         .slice(0, 7)
         .reduce((acc, curr) => acc + curr.total, 0)
-        .toFixed("2")
+        .toFixed('2')
       this.hotspot.month = data
         .reduce((acc, curr) => acc + curr.total, 0)
-        .toFixed("2")
+        .toFixed('2')
     },
 
     async reload() {
@@ -515,7 +515,7 @@ export default {
     this.timerLatest = setInterval(this.getLatestTime, 30000) // Every 30 seconds
     this.loaded = true
   },
-  beforeDestroy() {
+  beforeUnmount() {
     clearInterval(this.timerPage)
     clearInterval(this.timerLatest)
   },
