@@ -36,8 +36,8 @@
 </template>
 
 <script>
-import Tooltip from "./Tooltip.vue"
-import store from "../store.js"
+import Tooltip from './Tooltip.vue'
+import store from '../store.js'
 
 export default {
   components: { Tooltip },

@@ -45,9 +45,9 @@
 </template>
 
 <script>
-import HotspotCard from "../components/HotspotCard.vue"
-import Tooltip from "../components/Tooltip.vue"
-import store from "../store.js"
+import HotspotCard from '../components/HotspotCard.vue'
+import Tooltip from '../components/Tooltip.vue'
+import store from '../store.js'
 
 export default {
   components: { HotspotCard, Tooltip },

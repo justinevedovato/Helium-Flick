@@ -1,11 +1,11 @@
-@import url("https://fonts.googleapis.com/css2?family=Barlow:wght@100;300;400&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@100;300;400&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 #app {
   @apply bg-gray-900 rounded-lg shadow-sm flex flex-col h-screen overflow-hidden text-gray-400 relative;
-  font-family: "Barlow", sans serif;
+  font-family: 'Barlow', sans serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

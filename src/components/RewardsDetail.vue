@@ -29,35 +29,35 @@
 
 <script>
 export default {
-  props: ["item"],
+  props: ['item'],
   data() {
     return {
-      gradient: "",
+      gradient: '',
     }
   },
   computed: {
     info() {
       switch (this.item.type) {
-        case "poc_challengers":
-          return { name: "Challenger", color: "#480087" }
+        case 'poc_challengers':
+          return { name: 'Challenger', color: '#480087' }
 
-        case "poc_challengees":
-          return { name: "Beacon", color: "#414278" }
+        case 'poc_challengees':
+          return { name: 'Beacon', color: '#414278' }
 
-        case "data_credits":
-          return { name: "Data Credits", color: "#006666" }
+        case 'data_credits':
+          return { name: 'Data Credits', color: '#006666' }
 
-        case "poc_witnesses":
-          return { name: "Witness", color: "#b86f00" }
+        case 'poc_witnesses':
+          return { name: 'Witness', color: '#b86f00' }
 
         // case "assert_location_v2":
         //   return { name: "Assert Location", color: "#12a5ba" }
 
-        case "consensus":
-          return { name: "Consensus", color: "#8f0000" }
+        case 'consensus':
+          return { name: 'Consensus', color: '#8f0000' }
 
         default:
-          return { name: this.item.type, color: "#666" }
+          return { name: this.item.type, color: '#666' }
       }
     },
     // getGradient() {

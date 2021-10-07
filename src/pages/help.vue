@@ -114,8 +114,8 @@
 </template>
 
 <script>
-import Footer from "../components/Footer.vue"
-import store from "../store.js"
+import Footer from '../components/Footer.vue'
+import store from '../store.js'
 
 export default {
   components: { Footer },
@@ -145,7 +145,7 @@ h3 {
   @apply mb-3 mt-2 text-gray-300 relative;
   &::after {
     @apply w-48 absolute -bottom-0.5 left-0 bg-gradient-to-r from-gray-500 to-gray-900;
-    content: "";
+    content: '';
     height: 1px;
   }
 }

@@ -21,7 +21,7 @@
 export default {
   props: {
     inline: { type: Boolean, default: false },
-    dir: { type: String, default: "right" },
+    dir: { type: String, default: 'right' },
   },
 }
 </script>

@@ -161,20 +161,20 @@
 </template>
 
 <script>
-import store from "~/store.js"
-import LoadingDots from "~/components/LoadingDots.vue"
-import Tooltip from "../components/Tooltip.vue"
-import Footer from "../components/Footer.vue"
-import animalHash from "angry-purple-tiger"
-import draggable from "vuedraggable"
+import store from '~/store.js'
+import LoadingDots from '~/components/LoadingDots.vue'
+import Tooltip from '../components/Tooltip.vue'
+import Footer from '../components/Footer.vue'
+import animalHash from 'angry-purple-tiger'
+import draggable from 'vuedraggable'
 
 export default {
   components: { LoadingDots, Tooltip, Footer, draggable },
   data() {
     return {
-      address: "",
-      user: "",
-      message: "",
+      address: '',
+      user: '',
+      message: '',
       loaded: false,
       drag: false,
     }
@@ -198,11 +198,11 @@ export default {
   methods: {
     toggle() {
       store.display.maker = !store.display.maker
-      localStorage.setItem("display", JSON.stringify(store.display))
+      localStorage.setItem('display', JSON.stringify(store.display))
     },
     saveNewList() {
       store.addresses = this.addresses
-      localStorage.setItem("addresses", JSON.stringify(store.addresses))
+      localStorage.setItem('addresses', JSON.stringify(store.addresses))
     },
     newName(address) {
       return animalHash(address)
@@ -210,27 +210,27 @@ export default {
     async addFromAddress() {
       this.loaded = true
       const res = await fetch(
-        "https://api.helium.io/v1/hotspots/" + this.address
+        'https://api.helium.io/v1/hotspots/' + this.address
       )
       // Check if the hotspot exists
-      if (res.status == "404" || !this.address) {
+      if (res.status == '404' || !this.address) {
         this.loaded = false
         this.message = "Sorry! This address doesn't exist"
-        this.address = ""
+        this.address = ''
       } else {
         store.addresses.push(this.address)
-        localStorage.setItem("addresses", JSON.stringify(store.addresses))
-        this.address = ""
+        localStorage.setItem('addresses', JSON.stringify(store.addresses))
+        this.address = ''
 
         this.loaded = false
-        this.message = "Your hotspot has been added!"
+        this.message = 'Your hotspot has been added!'
       }
     },
 
     async addFromUser() {
       this.loaded = true
       const res = await fetch(
-        "https://api.helium.io/v1/accounts/" + this.user + "/hotspots"
+        'https://api.helium.io/v1/accounts/' + this.user + '/hotspots'
       )
       let { data } = await res.json()
 
@@ -238,14 +238,14 @@ export default {
       if (!data.length) {
         this.loaded = false
         this.message = "Sorry! This user doesn't exist"
-        this.user = ""
+        this.user = ''
       } else {
         let userAddresses = data.map((e) => e.address)
         store.addresses.push(...userAddresses)
-        localStorage.setItem("addresses", JSON.stringify(store.addresses))
+        localStorage.setItem('addresses', JSON.stringify(store.addresses))
         this.loaded = false
-        this.message = "All hotspots have been added!"
-        this.user = ""
+        this.message = 'All hotspots have been added!'
+        this.user = ''
       }
     },
 
@@ -255,12 +255,12 @@ export default {
           store.addresses.splice(i, 1)
           i--
         }
-        localStorage.setItem("addresses", JSON.stringify(store.addresses))
+        localStorage.setItem('addresses', JSON.stringify(store.addresses))
       }
     },
 
     clearAll() {
-      localStorage.removeItem("addresses")
+      localStorage.removeItem('addresses')
       store.addresses = []
       this.addresses = []
     },

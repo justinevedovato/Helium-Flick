@@ -170,67 +170,67 @@
 </template>
 
 <script>
-import animalHash from "angry-purple-tiger"
-import RewardsDetail from "./RewardsDetail.vue"
-import InvalidWitness from "./InvalidWitness.vue"
-import LoadingDots from "./LoadingDots.vue"
+import animalHash from 'angry-purple-tiger'
+import RewardsDetail from './RewardsDetail.vue'
+import InvalidWitness from './InvalidWitness.vue'
+import LoadingDots from './LoadingDots.vue'
 
 export default {
   components: { RewardsDetail, InvalidWitness, LoadingDots },
-  props: ["item", "index", "address"],
+  props: ['item', 'index', 'address'],
   data() {
     return {
       isValid: true,
       detailVisible: false,
       isLoaded: false,
-      challenger: "",
-      challengerName: "",
-      challengerLocation: "",
-      challengerFlagURL: "",
-      beaconer: "",
-      beaconerName: "",
-      beaconerLocation: "",
-      beaconerFlagURL: "",
+      challenger: '',
+      challengerName: '',
+      challengerLocation: '',
+      challengerFlagURL: '',
+      beaconer: '',
+      beaconerName: '',
+      beaconerLocation: '',
+      beaconerFlagURL: '',
     }
   },
 
   computed: {
     info() {
       switch (this.item.type) {
-        case "rewards_v2":
-          return { name: "Mining Reward", color: "#cf7d00" }
+        case 'rewards_v2':
+          return { name: 'Mining Reward', color: '#cf7d00' }
 
-        case "poc_receipts_v1":
+        case 'poc_receipts_v1':
           if (this.item.challenger == this.address)
-            return { name: "Challenger", color: "#480087" }
+            return { name: 'Challenger', color: '#480087' }
 
           if (this.item.path[0].challengee == this.address)
-            return { name: "Beacon", color: "#414278" }
+            return { name: 'Beacon', color: '#414278' }
 
           let witness = this.item.path[0].witnesses.find(
             (w) => w.gateway == this.address
           )
-          if (witness.is_valid) return { name: "Witness", color: "#914c07" }
+          if (witness.is_valid) return { name: 'Witness', color: '#914c07' }
 
-          return { name: "Witness", color: "#6f6f6f" }
+          return { name: 'Witness', color: '#6f6f6f' }
 
-        case "poc_request_v1":
-          return { name: "PoC Challenger", color: "#21a974" }
+        case 'poc_request_v1':
+          return { name: 'PoC Challenger', color: '#21a974' }
 
-        case "state_channel_close_v1":
-          return { name: "Packets Transferred", color: "#006666" }
+        case 'state_channel_close_v1':
+          return { name: 'Packets Transferred', color: '#006666' }
 
-        case "add_gateway_v1":
-          return { name: "Add Hotspot", color: "#3b4b6a" }
+        case 'add_gateway_v1':
+          return { name: 'Add Hotspot', color: '#3b4b6a' }
 
-        case "assert_location_v2":
-          return { name: "Assert Location", color: "#12a5ba" }
+        case 'assert_location_v2':
+          return { name: 'Assert Location', color: '#12a5ba' }
 
-        case "consensus_group_v1":
-          return { name: "Consensus Election", color: "#8f0000" }
+        case 'consensus_group_v1':
+          return { name: 'Consensus Election', color: '#8f0000' }
 
         default:
-          return { name: this.item.type, color: "#666" }
+          return { name: this.item.type, color: '#666' }
       }
     },
 
@@ -242,19 +242,19 @@ export default {
       ) {
         return (
           hotspot.geocode.short_city.slice(0, 19) +
-          "..., " +
+          '..., ' +
           hotspot.geocode.short_country
         )
       } else {
-        return hotspot.geocode.short_city + ", " + hotspot.geocode.short_country
+        return hotspot.geocode.short_city + ', ' + hotspot.geocode.short_country
       }
     },
     timeHour() {
       let date = new Date(this.item.time * 1000)
-        .toLocaleString("fr")
-        .split(",")[1]
-        .split(":")
-      return date[0] + ":" + date[1]
+        .toLocaleString('fr')
+        .split(',')[1]
+        .split(':')
+      return date[0] + ':' + date[1]
     },
 
     totalRewards() {
@@ -282,28 +282,28 @@ export default {
     async getChallenger() {
       if (this.item.challenger) {
         let res = await fetch(
-          "https://api.helium.io/v1/hotspots/" + this.item.challenger
+          'https://api.helium.io/v1/hotspots/' + this.item.challenger
         )
         let { data } = await res.json()
 
         this.challenger = this.item.challenger
         // get name:
         this.challengerName = data.name
-          .split("-")
+          .split('-')
           .map((w) => w[0].toUpperCase() + w.slice(1))
-          .join(" ")
+          .join(' ')
 
         // get location:
         if (!data.geocode.short_city) {
-          this.challengerLocation = "unknown, " + data.geocode.short_country
+          this.challengerLocation = 'unknown, ' + data.geocode.short_country
         } else if (data.geocode.short_city.length > 16) {
           this.challengerLocation =
             data.geocode.short_city.slice(0, 14) +
-            "...," +
+            '...,' +
             data.geocode.short_country
         } else {
           this.challengerLocation =
-            data.geocode.short_city + ", " + data.geocode.short_country
+            data.geocode.short_city + ', ' + data.geocode.short_country
         }
 
         // get flag:
@@ -324,11 +324,11 @@ export default {
         if (hotspot.geocode && hotspot.geocode.short_city.length > 16) {
           this.beaconerLocation =
             hotspot.geocode.short_city.slice(0, 14) +
-            "...," +
+            '...,' +
             hotspot.geocode.short_country
         } else {
           this.beaconerLocation =
-            hotspot.geocode.short_city + ", " + hotspot.geocode.short_country
+            hotspot.geocode.short_city + ', ' + hotspot.geocode.short_country
         }
 
         // get flag:

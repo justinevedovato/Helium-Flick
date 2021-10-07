@@ -27,26 +27,26 @@
 </template>
 
 <script>
-import animalHash from "angry-purple-tiger"
+import animalHash from 'angry-purple-tiger'
 
 export default {
-  props: ["item"],
+  props: ['item'],
   data() {
     return {
-      name: "",
+      name: '',
     }
   },
   computed: {
     reason() {
       switch (this.item.invalid_reason) {
-        case "witness_rssi_below_lower_bound":
-          return "Below lower bound"
+        case 'witness_rssi_below_lower_bound':
+          return 'Below lower bound'
 
-        case "witness_too_close":
-          return "Too close"
+        case 'witness_too_close':
+          return 'Too close'
 
-        case "witness_rssi_too_high":
-          return "Too high"
+        case 'witness_rssi_too_high':
+          return 'Too high'
 
         default:
           return this.item.invalid_reason

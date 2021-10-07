@@ -8,9 +8,9 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue"
-import { BarChart } from "vue-chart-3"
-import { Chart, registerables } from "chart.js"
+import { computed, ref } from 'vue'
+import { BarChart } from 'vue-chart-3'
+import { Chart, registerables } from 'chart.js'
 Chart.register(...registerables)
 
 const props = defineProps({
@@ -30,13 +30,13 @@ const chartData = computed(() => ({
     {
       data: props.data,
       backgroundColor: [
-        "#396075",
-        "#486f85",
-        "#5f889e",
-        "#6d93a8",
-        "#91b0c2",
-        "#b2c8d4",
-        "#c1d4de",
+        '#396075',
+        '#486f85',
+        '#5f889e',
+        '#6d93a8',
+        '#91b0c2',
+        '#b2c8d4',
+        '#c1d4de',
       ],
     },
   ],
@@ -48,7 +48,7 @@ const options = ref({
     tooltip: {
       displayColors: false,
       callbacks: {
-        label: (context) => context.parsed.y.toFixed(2) + " HNT",
+        label: (context) => context.parsed.y.toFixed(2) + ' HNT',
       },
     },
   },
@@ -62,8 +62,8 @@ const options = ref({
   },
   elements: {
     bar: {
-      borderRadius: "10px",
-      backgroundColor: "red",
+      borderRadius: '10px',
+      backgroundColor: 'red',
     },
   },
 })
