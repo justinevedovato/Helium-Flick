@@ -210,7 +210,7 @@ export default {
     async addFromAddress() {
       this.loaded = true
       const res = await fetch(
-        'https://api.helium.io/v1/hotspots/' + this.address
+        'https://helium-api.stakejoy.com/v1/hotspots/' + this.address
       )
       // Check if the hotspot exists
       if (res.status == '404' || !this.address) {
@@ -230,7 +230,7 @@ export default {
     async addFromUser() {
       this.loaded = true
       const res = await fetch(
-        'https://api.helium.io/v1/accounts/' + this.user + '/hotspots'
+        'https://helium-api.stakejoy.com/v1/accounts/' + this.user + '/hotspots'
       )
       let { data } = await res.json()
 

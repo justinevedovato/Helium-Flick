@@ -314,7 +314,7 @@ export default {
   methods: {
     openExternalUrl,
     async getHotspotInfos(address) {
-      const res = await fetch('https://api.helium.io/v1/hotspots/' + address)
+      const res = await fetch('https://helium-api.stakejoy.com/v1/hotspots/' + address)
       let { data } = await res.json()
 
       this.timestampAdded = data.timestamp_added.split('.')[0] + 'Z'
@@ -357,14 +357,14 @@ export default {
 
     async getActivity(address) {
       const res = await fetch(
-        'https://api.helium.io/v1/hotspots/' + address + '/activity'
+        'https://helium-api.stakejoy.com/v1/hotspots/' + address + '/activity'
       )
       let { data, cursor } = await res.json()
       this.activity = data
 
       if (cursor) {
         const res2 = await fetch(
-          'https://api.helium.io/v1/hotspots/' +
+          'https://helium-api.stakejoy.com/v1/hotspots/' +
             address +
             '/activity?cursor=' +
             cursor
@@ -394,7 +394,7 @@ export default {
       this.loaded = false
       try {
         const res = await fetch(
-          'https://api.helium.io/v1/hotspots/' +
+          'https://helium-api.stakejoy.com/v1/hotspots/' +
             this.address +
             '/activity?cursor=' +
             this.nextCursor
@@ -438,7 +438,7 @@ export default {
 
     async getTotalRewards(minTime) {
       const res = await fetch(
-        'https://api.helium.io/v1/hotspots/' +
+        'https://helium-api.stakejoy.com/v1/hotspots/' +
           this.address +
           '/rewards/sum?min_time=' +
           minTime
@@ -470,7 +470,7 @@ export default {
         max_time: UTCTime.toISOString(),
       })
       const res = await fetch(
-        'https://api.helium.io/v1/hotspots/' +
+        'https://helium-api.stakejoy.com/v1/hotspots/' +
           this.address +
           '/rewards/sum?' +
           params.toString()

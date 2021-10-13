@@ -282,7 +282,7 @@ export default {
     async getChallenger() {
       if (this.item.challenger) {
         let res = await fetch(
-          'https://api.helium.io/v1/hotspots/' + this.item.challenger
+          'https://helium-api.stakejoy.com/v1/hotspots/' + this.item.challenger
         )
         let { data } = await res.json()
 
