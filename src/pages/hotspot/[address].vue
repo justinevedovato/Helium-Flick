@@ -140,7 +140,7 @@
               items-center
             "
           >
-            <MonthlyChart :data="hotspot.monthAll" />
+            <MonthlyChart :data="hotspot.monthAll" :color="chartBlue" />
           </div>
           <div
             class="
@@ -301,6 +301,15 @@ export default {
       timestampAdded: '',
       timerPage: '',
       timerLatest: '',
+      chartBlue: [
+        '#396075',
+        '#486f85',
+        '#5f889e',
+        '#6d93a8',
+        '#91b0c2',
+        '#b2c8d4',
+        '#c1d4de',
+      ],
     }
   },
   computed: {

@@ -17,6 +17,10 @@
       >Home
     </router-link>
 
+    <router-link to="/wallet" class="hover:text-gray-300 px-2 py-1 flex"
+      >Wallet
+    </router-link>
+
     <router-link to="/settings" class="hover:text-gray-300 px-2 py-1 flex"
       >Settings
     </router-link>
@@ -30,7 +34,7 @@
     </router-link>
     <div class="drag-area w-full cursor-move"></div>
 
-    <div class="w-12 flex align-items-center pr-1">
+    <div class="w-16 pr-2">
       <img
         @click="minimize"
         src="./assets/close.svg"
@@ -86,10 +90,24 @@ export default {
         throw new Error(err)
       }
     },
+    async getOraclePrice() {
+      const res = await fetch(
+        'https://helium-api.stakejoy.com/v1/oracle/prices/current'
+      )
+      let { data } = await res.json()
+      store.oraclePrice = data.price
+    },
+    updateData() {
+      this.getNewRelease()
+      this.getOraclePrice()
+    },
   },
   created() {
     const allHotspots = JSON.parse(localStorage.getItem('addresses'))
     store.addresses = allHotspots || []
+
+    const allWallets = JSON.parse(localStorage.getItem('wallets'))
+    store.wallets = allWallets || []
 
     // Show brand
     const display = JSON.parse(localStorage.getItem('display'))
@@ -98,8 +116,8 @@ export default {
       store.display = Object.assign({}, store.display, display)
     }
 
-    this.timer = setInterval(this.getNewRelease, 3600000) // Every hour
-    this.getNewRelease()
+    this.timer = setInterval(this.updateData, 3600000) // Every hour
+    this.updateData()
   },
   beforeUnmount() {
     clearInterval(this.timer)

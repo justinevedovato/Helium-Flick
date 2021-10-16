@@ -28,7 +28,7 @@ export default {
 
 <style scoped>
 .tooltip {
-  @apply invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all absolute text-gray-300 text-sm py-1 px-1.5 rounded-md z-50;
+  @apply invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all absolute text-gray-300 text-sm py-1 px-1.5 rounded-md z-50 whitespace-nowrap;
   background-color: #090f1c;
   transition: opacity 0.3s;
 }

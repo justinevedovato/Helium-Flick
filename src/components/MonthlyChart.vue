@@ -1,5 +1,6 @@
 <template>
-  <BarChart
+  <component
+    :is="componentType"
     :chartData="chartData"
     :options="options"
     :width="224"
@@ -9,16 +10,28 @@
 
 <script setup>
 import { computed, ref } from 'vue'
-import { BarChart } from 'vue-chart-3'
+import { BarChart, LineChart } from 'vue-chart-3'
 import { Chart, registerables } from 'chart.js'
 Chart.register(...registerables)
 
 const props = defineProps({
+  type: {
+    type: String,
+    default: 'bar',
+  },
   data: {
     type: Array,
     default: () => [],
   },
+  color: {
+    type: Array,
+    default: () => [],
+  },
 })
+
+const componentType = computed(() =>
+  props.type === 'line' ? LineChart : BarChart
+)
 
 const chartData = computed(() => ({
   labels: props.data.map((n, i) => {
@@ -26,21 +39,16 @@ const chartData = computed(() => ({
     d.setDate(d.getDate() - (props.data.length - 1 - i))
     return d.toLocaleDateString()
   }),
+
   datasets: [
     {
       data: props.data,
-      backgroundColor: [
-        '#396075',
-        '#486f85',
-        '#5f889e',
-        '#6d93a8',
-        '#91b0c2',
-        '#b2c8d4',
-        '#c1d4de',
-      ],
+      backgroundColor: props.color,
+      borderColor: props.color,
     },
   ],
 }))
+
 const options = ref({
   responsive: true,
   plugins: {
@@ -64,6 +72,9 @@ const options = ref({
     bar: {
       borderRadius: '10px',
       backgroundColor: 'red',
+    },
+    point: {
+      radius: 2,
     },
   },
 })

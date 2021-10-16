@@ -143,6 +143,7 @@ export default {
       loaded: false,
       timer: '',
       brand: '',
+      
     }
   },
 
@@ -163,7 +164,9 @@ export default {
 
   methods: {
     async getHotspotInfos(address) {
-      const res = await fetch('https://helium-api.stakejoy.com/v1/hotspots/' + address)
+      const res = await fetch(
+        'https://helium-api.stakejoy.com/v1/hotspots/' + address
+      )
       let { data } = await res.json()
       this.timestampAdded = data.timestamp_added.split('.')[0] + 'Z'
 
