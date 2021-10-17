@@ -3,6 +3,7 @@
     <span class="flex mt-2 mb-2">
       <p
         class="
+          title
           text-white
           mx-auto
           flex
@@ -15,19 +16,25 @@
           py-0.5
         "
       >
-        <span class="flex flex-1"
-          ><a
+        <Tooltip
+          inline
+          dir="right"
+          class="flex hover:bg-gray-700 my-0.5 px-1.5 rounded"
+        >
+          <a
             href="#"
             @click.prevent="
               openExternalUrl('https://explorer.helium.com/accounts/' + item.id)
             "
+            class="leading-5"
             >{{ item.label }}</a
-          ></span
-        >
+          >
+          <template #tooltip> Open in Explorer </template>
+        </Tooltip>
 
         <span
           v-if="hotspots"
-          class="flex text-xs text-gray-300 self-center mr-0.5 mb-0.5"
+          class="flex text-xs text-gray-300 self-center mr-0.5 mb-0.5 ml-auto"
         >
           Hotspots: {{ hotspots }}
         </span>
@@ -39,8 +46,8 @@
             alt=""
             class="delete-icon w-4 h-4 mr-3"
           /><template #tooltip> Delete </template>
-        </Tooltip></span
-      >
+        </Tooltip>
+      </span>
     </span>
     <div v-if="showDel" class="flex justify-center mr-3 mb-3">
       <p class="text-xs flex space-x-2">
@@ -54,8 +61,9 @@
             hover:bg-gray-700 hover:text-gray-200
             cursor-pointer
           "
-          >No</span
-        ><span
+          >No
+        </span>
+        <span
           @click="deleteWallet(item.id)"
           class="
             bg-gray-800
@@ -64,8 +72,8 @@
             hover:bg-red-900 hover:text-gray-200
             cursor-pointer
           "
-          >Yes</span
-        >
+          >Yes
+        </span>
       </p>
     </div>
 
@@ -82,8 +90,8 @@
               'text-gray-200 underline': !showRewards,
               'text-gray-400': showRewards,
             }"
-            >Balance</span
-          >
+            >Balance
+          </span>
           <span
             @click="showRewards = true"
             class="px-2 cursor-pointer"
@@ -91,8 +99,8 @@
               'text-gray-400': !showRewards,
               'text-gray-200 underline': showRewards,
             }"
-            >Rewards</span
-          >
+            >Rewards
+          </span>
         </div>
         <div
           class="mx-auto bg-black mt-1 bg-opacity-20 rounded-md flex text-sm"
@@ -296,6 +304,9 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
+.title > .title a:hover {
+  border: 2px solid red;
+}
 .delete-icon {
   filter: invert(50%) sepia(40%) hue-rotate(170deg);
   @apply opacity-20 hover:opacity-50 cursor-pointer;

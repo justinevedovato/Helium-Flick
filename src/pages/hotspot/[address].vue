@@ -49,18 +49,21 @@
               pb-1.5
             "
           >
-            <h1 class="text-white text-lg inline font-thin leading-6">
-              <a
-                href="#"
-                @click.prevent="
-                  openExternalUrl(
-                    'https://explorer.helium.com/hotspots/' + address
-                  )
-                "
-              >
-                {{ name }}
-              </a>
-            </h1>
+            <Tooltip inline dir="bottom">
+              <h1 class="text-white text-lg inline font-thin leading-6">
+                <a
+                  href="#"
+                  @click.prevent="
+                    openExternalUrl(
+                      'https://explorer.helium.com/hotspots/' + address
+                    )
+                  "
+                >
+                  {{ name }}
+                </a>
+              </h1>
+              <template #tooltip> Open in Explorer </template>
+            </Tooltip>
 
             <Tooltip inline dir="bottom" class="ml-2">
               <span
@@ -69,8 +72,8 @@
                   'text-yellow-500 animate-pulse': hotspot.status == 'syncing',
                   'text-red-700': hotspot.status == 'offline',
                 }"
-                >●</span
-              >
+                >●
+              </span>
               <template #tooltip>
                 <span class="capitalize">{{ hotspot.status }}</span>
               </template>
@@ -323,7 +326,9 @@ export default {
   methods: {
     openExternalUrl,
     async getHotspotInfos(address) {
-      const res = await fetch('https://helium-api.stakejoy.com/v1/hotspots/' + address)
+      const res = await fetch(
+        'https://helium-api.stakejoy.com/v1/hotspots/' + address
+      )
       let { data } = await res.json()
 
       this.timestampAdded = data.timestamp_added.split('.')[0] + 'Z'
