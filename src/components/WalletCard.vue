@@ -90,8 +90,8 @@
               'text-gray-200 underline': !showRewards,
               'text-gray-400': showRewards,
             }"
-            >Balance
-          </span>
+            >Balance</span
+          >
           <span
             @click="showRewards = true"
             class="px-2 cursor-pointer"
