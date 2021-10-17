@@ -17,14 +17,14 @@
       @click.prevent="
         openExternalUrl('https://github.com/justinevedovato/Helium-Flick')
       "
-      class="text-xs text-gray-500 text-center mx-auto"
+      class="text-xs text-gray-500 text-center mx-auto hover:text-gray-400"
       >HeliumFlick {{ version }}
     </a>
 
     <div
       class="absolute right-2 w-7 opacity-50 hover:opacity-100 cursor-pointer"
     >
-      <Tooltip inline dir="left">
+      <Tooltip inline dir="left" class="flex">
         <router-link to="/donate">
           <img src="../assets/heart.svg" alt="" class="heart" />
           <img src="../assets/hand.svg" alt="" class="w-6 bottom-1.5 right-3" />

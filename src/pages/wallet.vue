@@ -23,14 +23,30 @@
         />
       </div>
       <div v-else class="flex flex-col">
-        <p class="text-center mt-10 mb-12">No Wallets yet</p>
+        <p class="text-center mt-10 mb-12">No wallets yet</p>
+        <p
+          @click="toggleAdd"
+          class="
+            bg-gray-800
+            hover:bg-indigo-900
+            px-2.5
+            py-1.5
+            rounded-lg
+            text-sm
+            mx-auto
+            mb-5
+            text-gray-300
+            cursor-pointer
+          "
+        >
+          Add a wallet
+        </p>
       </div>
-      <p class="text-sm text-center">{{ message }}</p>
 
-      <div class="w-full flex">
+      <div v-if="wallets.length" class="w-full flex">
         <Tooltip inline dir="left" class="flex ml-auto"
           ><p
-            @click="cancelAdd"
+            @click="toggleAdd"
             class="
               cursor-pointer
               px-1
@@ -92,7 +108,7 @@
         </div>
         <div class="flex space-x-1.5 justify-end">
           <button
-            @click="cancelAdd"
+            @click="toggleAdd"
             class="
               self-end
               bg-gray-700
@@ -120,6 +136,7 @@
             Add
           </button>
         </div>
+        <p class="text-sm text-center">{{ message }}</p>
       </div>
     </perfect-scrollbar>
   </div>
@@ -135,7 +152,7 @@ export default {
   data() {
     return {
       newWallet: '',
-      newLabel: 'My Wallet',
+      newLabel: '',
       loaded: false,
       cardRefs: [],
       panelOpened: false,
@@ -161,9 +178,17 @@ export default {
         this.id = ''
       } else {
         if (!this.newLabel) {
-          store.wallets.push({ label: 'My Wallet', id: this.newWallet })
+          store.wallets.push({
+            label: 'My Wallet',
+            id: this.newWallet,
+            showRewards: false,
+          })
         } else {
-          store.wallets.push({ label: this.newLabel, id: this.newWallet })
+          store.wallets.push({
+            label: this.newLabel,
+            id: this.newWallet,
+            showRewards: false,
+          })
         }
         localStorage.setItem('wallets', JSON.stringify(store.wallets))
         this.newWallet = ''
@@ -172,7 +197,7 @@ export default {
         this.panelOpened = false
       }
     },
-    cancelAdd() {
+    toggleAdd() {
       this.panelOpened = !this.panelOpened
       this.message = ''
     },

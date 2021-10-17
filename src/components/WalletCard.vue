@@ -1,30 +1,39 @@
 <template>
   <div>
     <span class="flex mt-2 mb-2">
-      <a
-        href="#"
-        @click.prevent="
-          openExternalUrl('https://explorer.helium.com/accounts/' + item.id)
+      <p
+        class="
+          text-white
+          mx-auto
+          flex
+          w-11/12
+          text-center
+          bg-gray-800 bg-opacity-70
+          rounded-full
+          mr-3
+          px-3
+          py-0.5
         "
-        class="flex flex-1 items-baseline"
       >
-        <p
-          class="
-            text-white
-            mx-auto
-            w-11/12
-            text-center
-            bg-gray-800 bg-opacity-70
-            hover:bg-opacity-100
-            rounded-full
-            py-0.5
-          "
+        <span class="flex flex-1"
+          ><a
+            href="#"
+            @click.prevent="
+              openExternalUrl('https://explorer.helium.com/accounts/' + item.id)
+            "
+            >{{ item.label }}</a
+          ></span
         >
-          {{ item.label }}
-        </p>
-      </a>
+
+        <span
+          v-if="hotspots"
+          class="flex text-xs text-gray-300 self-center mr-0.5 mb-0.5"
+        >
+          Hotspots: {{ hotspots }}
+        </span>
+      </p>
       <span @click="showDel = !showDel" class="flex items-center"
-        ><Tooltip inline dir="left" class="ml-auto"
+        ><Tooltip inline dir="left" class="flex ml-auto"
           ><img
             src="../assets/trash.svg"
             alt=""
@@ -62,7 +71,10 @@
 
     <div class="flex w-full mx-2 h-28 overflow-hidden mb-2 items-center">
       <div class="flex flex-col justify-center">
-        <div class="divide divide-x divide-gray-500 text-sm mx-auto mb-1">
+        <div
+          v-if="hotspots"
+          class="divide divide-x divide-gray-500 text-sm mx-auto mb-1"
+        >
           <span
             @click="showRewards = false"
             class="px-2 cursor-pointer"
@@ -99,11 +111,26 @@
             ]"
           />
           <MonthlyChart
-            v-if="!showRewards"
+            v-if="!tooRecent && !showRewards"
             type="line"
             :data="balanceMonth"
             :color="['#85092e']"
           />
+          <span
+            v-if="tooRecent && !showRewards"
+            class="
+              mx-auto
+              rounded-md
+              flex
+              text-sm
+              h-20
+              w-56
+              justify-center
+              items-center
+            "
+          >
+            Not enough data
+          </span>
         </div>
       </div>
       <div v-if="loaded" class="flex flex-1 flex-col items-center">
@@ -156,15 +183,17 @@ export default {
       timer: '',
       showRewards: false,
       showDel: false,
+      hotspots: '',
       oraclePrice: '',
+      tooRecent: false,
     }
   },
 
   methods: {
     openExternalUrl,
-    async geWalletInfos(address) {
+    async geWalletInfos() {
       const res = await fetch(
-        'https://helium-api.stakejoy.com/v1/accounts/' + address
+        'https://helium-api.stakejoy.com/v1/accounts/' + this.item.id
       )
       let { data } = await res.json()
       this.balance = (data.balance / 100000000).toFixed(2)
@@ -174,13 +203,30 @@ export default {
       ).toFixed(2)
     },
 
-    async getBalance(address) {
+    async getWalletHotspots() {
       const res = await fetch(
-        'https://helium-api.stakejoy.com/v1/accounts/' + address + '/stats'
+        'https://helium-api.stakejoy.com/v1/accounts/' +
+          this.item.id +
+          '/hotspots'
       )
       let { data } = await res.json()
-      let monthAll = data.last_month
-      this.balanceMonth = monthAll.map((r) => r.balance / 100000000).reverse()
+      this.hotspots = data.length
+    },
+
+    async getMonthlyBalance() {
+      try {
+        const res = await fetch(
+          'https://helium-api.stakejoy.com/v1/accounts/' +
+            this.item.id +
+            '/stats'
+        )
+        let { data } = await res.json()
+        let monthAll = data.last_month
+        this.balanceMonth = monthAll.map((r) => r.balance / 100000000).reverse()
+      } catch (e) {
+        this.tooRecent = true
+        this.showRewards = true
+      }
     },
 
     deleteWallet(id) {
@@ -191,9 +237,10 @@ export default {
         }
         localStorage.setItem('wallets', JSON.stringify(store.wallets))
       }
+      this.showDel = false
     },
 
-    async getRewards(address) {
+    async getRewards() {
       let nowTime = new Date()
       nowTime.setHours(23)
       nowTime.setMinutes(59)
@@ -215,7 +262,7 @@ export default {
       })
       const res = await fetch(
         'https://helium-api.stakejoy.com/v1/accounts/' +
-          address +
+          this.item.id +
           '/rewards/sum?' +
           params.toString()
       )
@@ -228,17 +275,19 @@ export default {
       this.loaded = true
     },
     async updateData() {
-      await this.geWalletInfos(this.item.id)
-      await this.getBalance(this.item.id)
-      await this.getRewards(this.item.id)
+      await this.geWalletInfos()
+      await this.getWalletHotspots()
+      await this.getRewards()
     },
   },
   async created() {
     this.timer = setInterval(this.updateData, 600000)
+
     await this.updateData()
 
     // Show when the rest is loaded
     this.loaded = true
+    await this.getMonthlyBalance()
   },
   beforeUnmount() {
     clearInterval(this.timer)

@@ -4,7 +4,7 @@
   </h2>
 
   <perfect-scrollbar class="list flex-1">
-    <div class="w-5/6 mx-auto">
+    <div class="w-5/6 mx-auto mb-5">
       <h3>Hotspot Status</h3>
 
       <div class="text-sm text-gray-400 space-y-2">
@@ -81,7 +81,7 @@
             class="
               hover:underline
               text-gray-200
-              bg-black bg-opacity-30
+              bg-seagreen bg-opacity-70
               py-2
               px-3
               rounded-md
@@ -107,6 +107,23 @@
           </a>
         </p>
       </div>
+      <h3>Wallets</h3>
+      <p class="text-sm mt-2 text-justify">
+        <span class="underline">Balance</span>: The given USD price is
+        calculated according to Oracle, which is also used by Helium Explorer.
+      </p>
+      <p class="text-sm mt-2 text-justify">
+        <span class="underline">More details</span>: Clicking on the Wallet name
+        will open it on the Explorer webpage, if you want more data about your
+        activities and transactions.
+      </p>
+      <p class="text-sm mt-2 text-justify">
+        <span class="underline">Graphs</span>: If your wallet doesn't give you
+        the option to toggle between the Balance graph and the Rewards graph,
+        it's because it doesn't have hotspots attached, and therefore can't earn
+        HNT. Any transfered/received HNT will be visible in the Balance graph
+        only.
+      </p>
     </div>
   </perfect-scrollbar>
 

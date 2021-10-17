@@ -18,7 +18,7 @@
     </router-link>
 
     <router-link to="/wallet" class="hover:text-gray-300 px-2 py-1 flex"
-      >Wallet
+      >Wallets
     </router-link>
 
     <router-link to="/settings" class="hover:text-gray-300 px-2 py-1 flex"

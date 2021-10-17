@@ -138,19 +138,28 @@
               <p class="text-gray-300 flex-1">
                 {{ newName(element) }}
               </p>
-              <span
-                @click="deleteAddress(element)"
-                class="
-                  text-right
-                  bg-gray-800
-                  cursor-pointer
-                  hover:bg-indigo-900 hover:text-gray-200
-                  rounded-full
-                  text-sm
-                "
-              >
-                <img src="../assets/close.svg" alt="" class="h-5 w-5 p-1.5" />
-              </span>
+              <Tooltip inline dir="left"
+                ><span
+                  @click="deleteAddress(element)"
+                  class="
+                    text-right
+                    bg-gray-800
+                    flex
+                    cursor-pointer
+                    w-6
+                    h-6
+                    hover:bg-indigo-900
+                    rounded-full
+                    text-sm
+                  "
+                >
+                  <img
+                    src="../assets/trash.svg"
+                    alt=""
+                    class="delete-icon mx-auto"
+                  /> </span
+                ><template #tooltip> Delete </template>
+              </Tooltip>
             </div>
           </div>
         </template>
@@ -269,6 +278,13 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
+.delete-icon {
+  @apply opacity-30 hover:opacity-50 cursor-pointer;
+  filter: invert(100%) sepia(40%) hue-rotate(190deg);
+  height: 14px;
+  width: 14px;
+  margin-top: 5px;
+}
 .add-hotspots {
   input {
     @apply w-full h-7 rounded-l-md bg-gray-800 border border-gray-700 focus:border-indigo-700 focus:outline-none;
