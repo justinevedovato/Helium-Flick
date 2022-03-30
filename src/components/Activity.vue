@@ -31,14 +31,7 @@
       <!-- If reward: -->
       <div
         v-if="item.rewards"
-        class="
-          text-sm text-gray-200
-          ml-auto
-          mr-2
-          flex
-          self-center
-          items-baseline
-        "
+        class="text-sm text-gray-200 ml-auto mr-2 flex self-center items-baseline"
       >
         <span>{{ totalRewards }} HNT</span>
       </div>
@@ -46,14 +39,7 @@
       <!-- If packet transfer: -->
       <div
         v-if="item.state_channel"
-        class="
-          text-sm text-gray-200
-          ml-auto
-          mr-2
-          flex
-          self-center
-          items-baseline
-        "
+        class="text-sm text-gray-200 ml-auto mr-2 flex self-center items-baseline"
       >
         <span>{{ item.state_channel.summaries[0].num_dcs }} DC</span>
       </div>
@@ -129,18 +115,7 @@
         </div>
         <div class="flex justify-center mt-3 mb-1.5">
           <p
-            class="
-              font-light
-              align-center
-              inline-flex
-              space-x-4
-              py-1.5
-              px-2.5
-              rounded-md
-              bg-gray-800 bg-opacity-50
-              uppercase
-              text-customxs text-gray-100
-            "
+            class="font-light align-center inline-flex space-x-4 py-1.5 px-2.5 rounded-md bg-gray-800 bg-opacity-50 uppercase text-customxs text-gray-100"
           >
             <span> Valid: {{ validWitnesses }} </span>
             <span> Invalid: {{ invalidWitnesses.length }} </span>
@@ -282,7 +257,8 @@ export default {
     async getChallenger() {
       if (this.item.challenger) {
         let res = await fetch(
-          'https://helium-api.stakejoy.com/v1/hotspots/' + this.item.challenger
+          'https://ugxlyxnlrg9udfdyzwnrvghlu2vydmvycg.blockjoy.com/v1/hotspots/' +
+            this.item.challenger
         )
         let { data } = await res.json()
 

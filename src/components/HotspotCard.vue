@@ -8,17 +8,7 @@
   <div>
     <router-link :to="link" class="flex">
       <div
-        class="
-          card
-          flex
-          w-full
-          hover:bg-gray-800
-          mx-2
-          rounded-md
-          h-16
-          overflow-hidden
-          items-center
-        "
+        class="card flex w-full hover:bg-gray-800 mx-2 rounded-md h-16 overflow-hidden items-center"
       >
         <Tooltip v-if="showMaker" class="w-2 h-full">
           <div
@@ -70,47 +60,20 @@
         <!-- Spinner -->
         <div v-if="!loaded" class="flex items-center justify-center h-16">
           <div
-            class="
-              loader
-              ease-linear
-              rounded-full
-              border-4 border-t-4 border-gray-800
-              mr-3
-              h-12
-              w-12
-            "
+            class="loader ease-linear rounded-full border-4 border-t-4 border-gray-800 mr-3 h-12 w-12"
           ></div>
         </div>
         <div
           v-else
-          class="
-            flex flex-col
-            justify-center
-            items-end
-            pr-2
-            text-sm
-            space-y-0.5
-          "
+          class="flex flex-col justify-center items-end pr-2 text-sm space-y-0.5"
         >
           <span
-            class="
-              bg-purple-900 bg-opacity-50
-              text-gray-100
-              py-0.5
-              px-2
-              rounded-full
-            "
+            class="bg-purple-900 bg-opacity-50 text-gray-100 py-0.5 px-2 rounded-full"
           >
             <span class="text-gray-400 text-xs pr-1">Day</span>{{ rewardsDay }}
           </span>
           <span
-            class="
-              bg-indigo-900 bg-opacity-50
-              text-gray-100
-              py-0.5
-              px-2
-              rounded-full
-            "
+            class="bg-indigo-900 bg-opacity-50 text-gray-100 py-0.5 px-2 rounded-full"
           >
             <span class="text-gray-400 text-xs pr-0.5">Total</span>
             {{ rewardsTotal }}
@@ -143,7 +106,6 @@ export default {
       loaded: false,
       timer: '',
       brand: '',
-      
     }
   },
 
@@ -165,7 +127,8 @@ export default {
   methods: {
     async getHotspotInfos(address) {
       const res = await fetch(
-        'https://helium-api.stakejoy.com/v1/hotspots/' + address
+        'https://ugxlyxnlrg9udfdyzwnrvghlu2vydmvycg.blockjoy.com/v1/hotspots/' +
+          address
       )
       let { data } = await res.json()
       this.timestampAdded = data.timestamp_added.split('.')[0] + 'Z'
@@ -222,7 +185,7 @@ export default {
 
     async getRewards(address) {
       const res = await fetch(
-        'https://helium-api.stakejoy.com/v1/hotspots/' +
+        'https://ugxlyxnlrg9udfdyzwnrvghlu2vydmvycg.blockjoy.com/v1/hotspots/' +
           address +
           '/rewards/sum?min_time=' +
           this.timestampAdded
@@ -252,7 +215,7 @@ export default {
         max_time: UTCTime.toISOString(),
       })
       const res = await fetch(
-        'https://helium-api.stakejoy.com/v1/hotspots/' +
+        'https://ugxlyxnlrg9udfdyzwnrvghlu2vydmvycg.blockjoy.com/v1/hotspots/' +
           address +
           '/rewards/sum?' +
           params.toString()
@@ -285,7 +248,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 .card:hover {
   .brand-color {
     @apply opacity-100;

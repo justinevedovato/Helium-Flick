@@ -1,17 +1,6 @@
 <template>
   <div
-    class="
-      navbar
-      relative
-      w-full
-      space-x-1
-      flex
-      text-xs
-      uppercase
-      ml-1
-      my-0.5
-      pointer-events-auto
-    "
+    class="navbar relative w-full space-x-1 flex text-xs uppercase ml-1 my-0.5 pointer-events-auto"
   >
     <router-link to="/" class="hover:text-gray-300 px-2 py-1 flex"
       >Home
@@ -38,15 +27,7 @@
       <img
         @click="minimize"
         src="./assets/close.svg"
-        class="
-          h-5
-          opacity-75
-          mt-0.5
-          p-1
-          cursor-pointer
-          hover:opacity-100 hover:bg-gray-600
-          rounded-full
-        "
+        class="h-5 opacity-75 mt-0.5 p-1 cursor-pointer hover:opacity-100 hover:bg-gray-600 rounded-full"
       />
     </div>
   </div>
@@ -92,7 +73,7 @@ export default {
     },
     async getOraclePrice() {
       const res = await fetch(
-        'https://helium-api.stakejoy.com/v1/oracle/prices/current'
+        'https://ugxlyxnlrg9udfdyzwnrvghlu2vydmvycg.blockjoy.com/v1/oracle/prices/current'
       )
       let { data } = await res.json()
       store.oraclePrice = data.price

@@ -26,7 +26,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 .tooltip {
   @apply invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all absolute text-gray-300 text-sm py-1 px-1.5 rounded-md z-50 whitespace-nowrap;
   background-color: #090f1c;

@@ -25,14 +25,7 @@
         </p>
       </div>
       <p
-        class="
-          text-sm
-          mt-3
-          text-gray-400 text-justify
-          bg-black bg-opacity-20
-          p-4
-          rounded-md
-        "
+        class="text-sm mt-3 text-gray-400 text-justify bg-black bg-opacity-20 p-4 rounded-md"
       >
         <span class="underline">Warning</span>: Please note that depending on
         your miner*, the status information given by Helium API is very likely
@@ -78,14 +71,7 @@
                 'https://github.com/justinevedovato/Helium-Flick/releases'
               )
             "
-            class="
-              hover:underline
-              text-gray-200
-              bg-seagreen bg-opacity-70
-              py-2
-              px-3
-              rounded-md
-            "
+            class="hover:underline text-gray-200 bg-seagreen bg-opacity-70 py-2 px-3 rounded-md"
             >Download it here!
           </a>
         </p>
@@ -157,7 +143,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 h3 {
   @apply mb-3 mt-2 text-gray-300 relative;
   &::after {

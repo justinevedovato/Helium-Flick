@@ -17,16 +17,7 @@
             ></div>
             <!-- dot -->
             <div
-              class="
-                dot
-                absolute
-                top-0.5
-                bg-white
-                w-3
-                h-3
-                rounded-full
-                transition
-              "
+              class="dot absolute top-0.5 bg-white w-3 h-3 rounded-full transition"
               :class="[showMaker ? 'right-0.5' : 'left-0.5']"
             ></div>
           </div>
@@ -35,15 +26,7 @@
       </div>
       <!-- Divider: -->
       <div
-        class="
-          w-full
-          bg-gradient-to-r
-          from-gray-900
-          via-gray-700
-          to-gray-900
-          mx-auto
-          mb-1
-        "
+        class="w-full bg-gradient-to-r from-gray-900 via-gray-700 to-gray-900 mx-auto mb-1"
         style="height: 1px"
       ></div>
       <div class="add-hotspots mx-auto w-5/6 flex flex-col">
@@ -88,18 +71,7 @@
 
       <div
         @click="clearAll"
-        class="
-          bg-black bg-opacity-30
-          text-gray-300
-          cursor-pointer
-          mx-auto
-          text-sm text-center
-          py-1
-          px-2
-          my-3
-          rounded-md
-          hover:bg-red-900
-        "
+        class="bg-black bg-opacity-30 text-gray-300 cursor-pointer mx-auto text-sm text-center py-1 px-2 my-3 rounded-md hover:bg-red-900"
       >
         Clear all
       </div>
@@ -107,15 +79,7 @@
 
     <!-- Divider: -->
     <div
-      class="
-        w-full
-        bg-gradient-to-r
-        from-gray-900
-        via-gray-700
-        to-gray-900
-        mx-auto
-        mb-1
-      "
+      class="w-full bg-gradient-to-r from-gray-900 via-gray-700 to-gray-900 mx-auto mb-1"
       style="height: 1px"
     ></div>
     <perfect-scrollbar class="list flex-1 px-6 pb-3 w-11/12 mx-auto">
@@ -123,17 +87,7 @@
         <template #item="{ element }">
           <div class="flex-1 select-none cursor-move">
             <div
-              class="
-                flex
-                w-full
-                mx-auto
-                py-1
-                px-3
-                items-center
-                text-sm
-                hover:bg-black hover:bg-opacity-20
-                rounded-md
-              "
+              class="flex w-full mx-auto py-1 px-3 items-center text-sm hover:bg-black hover:bg-opacity-20 rounded-md"
             >
               <p class="text-gray-300 flex-1">
                 {{ newName(element) }}
@@ -141,17 +95,7 @@
               <Tooltip inline dir="left"
                 ><span
                   @click="deleteAddress(element)"
-                  class="
-                    text-right
-                    bg-gray-800
-                    flex
-                    cursor-pointer
-                    w-6
-                    h-6
-                    hover:bg-indigo-900
-                    rounded-full
-                    text-sm
-                  "
+                  class="text-right bg-gray-800 flex cursor-pointer w-6 h-6 hover:bg-indigo-900 rounded-full text-sm"
                 >
                   <img
                     src="../assets/trash.svg"
@@ -219,7 +163,8 @@ export default {
     async addFromAddress() {
       this.loaded = true
       const res = await fetch(
-        'https://helium-api.stakejoy.com/v1/hotspots/' + this.address
+        'https://ugxlyxnlrg9udfdyzwnrvghlu2vydmvycg.blockjoy.com/v1/hotspots/' +
+          this.address
       )
       // Check if the hotspot exists
       if (res.status == '404' || !this.address) {
@@ -239,7 +184,9 @@ export default {
     async addFromUser() {
       this.loaded = true
       const res = await fetch(
-        'https://helium-api.stakejoy.com/v1/accounts/' + this.user + '/hotspots'
+        'https://ugxlyxnlrg9udfdyzwnrvghlu2vydmvycg.blockjoy.com/v1/accounts/' +
+          this.user +
+          '/hotspots'
       )
       let { data } = await res.json()
 

@@ -2,19 +2,7 @@
   <div>
     <span class="flex mt-2 mb-2">
       <p
-        class="
-          title
-          text-white
-          mx-auto
-          flex
-          w-11/12
-          text-center
-          bg-gray-800 bg-opacity-70
-          rounded-full
-          mr-3
-          px-3
-          py-0.5
-        "
+        class="title text-white mx-auto flex w-11/12 text-center bg-gray-800 bg-opacity-70 rounded-full mr-3 px-3 py-0.5"
       >
         <Tooltip
           inline
@@ -54,24 +42,12 @@
         <span>Delete this wallet?</span>
         <span
           @click="showDel = false"
-          class="
-            bg-gray-800
-            px-1.5
-            rounded-md
-            hover:bg-gray-700 hover:text-gray-200
-            cursor-pointer
-          "
+          class="bg-gray-800 px-1.5 rounded-md hover:bg-gray-700 hover:text-gray-200 cursor-pointer"
           >No
         </span>
         <span
           @click="deleteWallet(item.id)"
-          class="
-            bg-gray-800
-            px-1.5
-            rounded-md
-            hover:bg-red-900 hover:text-gray-200
-            cursor-pointer
-          "
+          class="bg-gray-800 px-1.5 rounded-md hover:bg-red-900 hover:text-gray-200 cursor-pointer"
           >Yes
         </span>
       </p>
@@ -126,16 +102,7 @@
           />
           <span
             v-if="tooRecent && !showRewards"
-            class="
-              mx-auto
-              rounded-md
-              flex
-              text-sm
-              h-20
-              w-56
-              justify-center
-              items-center
-            "
+            class="mx-auto rounded-md flex text-sm h-20 w-56 justify-center items-center"
           >
             Not enough data
           </span>
@@ -157,14 +124,7 @@
         class="flex items-center self-center mx-auto justify-center h-16"
       >
         <div
-          class="
-            loader
-            ease-linear
-            rounded-full
-            border-4 border-t-4 border-gray-800
-            h-16
-            w-16
-          "
+          class="loader ease-linear rounded-full border-4 border-t-4 border-gray-800 h-16 w-16"
         ></div>
       </div>
     </div>
@@ -201,7 +161,8 @@ export default {
     openExternalUrl,
     async geWalletInfos() {
       const res = await fetch(
-        'https://helium-api.stakejoy.com/v1/accounts/' + this.item.id
+        'https://ugxlyxnlrg9udfdyzwnrvghlu2vydmvycg.blockjoy.com/v1/accounts/' +
+          this.item.id
       )
       let { data } = await res.json()
       this.balance = (data.balance / 100000000).toFixed(2)
@@ -213,7 +174,7 @@ export default {
 
     async getWalletHotspots() {
       const res = await fetch(
-        'https://helium-api.stakejoy.com/v1/accounts/' +
+        'https://ugxlyxnlrg9udfdyzwnrvghlu2vydmvycg.blockjoy.com/v1/accounts/' +
           this.item.id +
           '/hotspots'
       )
@@ -224,7 +185,7 @@ export default {
     async getMonthlyBalance() {
       try {
         const res = await fetch(
-          'https://helium-api.stakejoy.com/v1/accounts/' +
+          'https://ugxlyxnlrg9udfdyzwnrvghlu2vydmvycg.blockjoy.com/v1/accounts/' +
             this.item.id +
             '/stats'
         )
@@ -269,7 +230,7 @@ export default {
         max_time: UTCTime.toISOString(),
       })
       const res = await fetch(
-        'https://helium-api.stakejoy.com/v1/accounts/' +
+        'https://ugxlyxnlrg9udfdyzwnrvghlu2vydmvycg.blockjoy.com/v1/accounts/' +
           this.item.id +
           '/rewards/sum?' +
           params.toString()

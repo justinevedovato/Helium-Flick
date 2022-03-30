@@ -17,18 +17,7 @@
                 'https://explorer.helium.com/accounts/' + hotspot.brandAddress
               )
             "
-            class="
-              text-sm
-              mt-2
-              flex
-              items-center
-              px-1.5
-              py-0.5
-              hover:bg-black hover:bg-opacity-20 hover:text-gray-300
-              cursor-pointer
-              rounded-md
-              absolute
-            "
+            class="text-sm mt-2 flex items-center px-1.5 py-0.5 hover:bg-black hover:bg-opacity-20 hover:text-gray-300 cursor-pointer rounded-md absolute"
           >
             <div class="h-2 w-2 mr-2" :class="hotspot.brand.color"></div>
             <span>{{ hotspot.brand.name }} </span>
@@ -40,14 +29,7 @@
 
         <div class="text-center flex-1 mb-2">
           <div
-            class="
-              inline
-              hover:bg-black hover:bg-opacity-20
-              px-2
-              rounded-md
-              pt-1
-              pb-1.5
-            "
+            class="inline hover:bg-black hover:bg-opacity-20 px-2 rounded-md pt-1 pb-1.5"
           >
             <Tooltip inline dir="bottom">
               <h1 class="text-white text-lg inline font-thin leading-6">
@@ -86,13 +68,7 @@
 
           <div class="flex flex-col text-white mt-2.5">
             <span
-              class="
-                text-indigo-300 text-xl
-                py-0.5
-                mx-2
-                rounded-full
-                bg-gray-800 bg-opacity-50
-              "
+              class="text-indigo-300 text-xl py-0.5 mx-2 rounded-full bg-gray-800 bg-opacity-50"
               ><LoadingDots v-if="!hotspot.rewardAmount" class="self-center" />
               <span>{{ hotspot.rewardAmount }}</span>
             </span>
@@ -100,16 +76,7 @@
             <!-- Last activity seen: -->
 
             <div
-              class="
-                text-sm
-                justify-end
-                text-gray-400
-                mt-2.5
-                mr-1.5
-                -mb-1
-                flex
-                align-baseline
-              "
+              class="text-sm justify-end text-gray-400 mt-2.5 mr-1.5 -mb-1 flex align-baseline"
             >
               <LoadingDots v-if="!hotspot.lastUpdated" class="self-center" />
               <p class="mr-2">{{ hotspot.lastUpdated }}</p>
@@ -131,29 +98,12 @@
       <perfect-scrollbar class="list flex-1 px-2 pb-3">
         <div class="flex">
           <div
-            class="
-              w-56
-              h-20
-              ml-1.5
-              bg-black bg-opacity-20
-              rounded-md
-              flex
-              text-sm
-              justify-center
-              items-center
-            "
+            class="w-56 h-20 ml-1.5 bg-black bg-opacity-20 rounded-md flex text-sm justify-center items-center"
           >
             <MonthlyChart :data="hotspot.monthAll" :color="chartBlue" />
           </div>
           <div
-            class="
-              text-xs text-center
-              flex-1
-              text-gray-500
-              justify-center
-              flex flex-col
-              space-y-1
-            "
+            class="text-xs text-center flex-1 text-gray-500 justify-center flex flex-col space-y-1"
           >
             <p>
               <span>Today: </span>
@@ -225,14 +175,7 @@
         <!-- Spinner -->
         <div v-if="!loaded" class="flex justify-center mt-10 mb-12">
           <div
-            class="
-              loader
-              ease-linear
-              rounded-full
-              border-4 border-t-4 border-gray-800
-              h-20
-              w-20
-            "
+            class="loader ease-linear rounded-full border-4 border-t-4 border-gray-800 h-20 w-20"
           ></div>
         </div>
 
@@ -240,20 +183,7 @@
         <div
           v-if="loaded && nextCursor"
           @click="loadMoreActivity"
-          class="
-            mx-auto
-            w-24
-            px-3
-            py-2
-            text-center
-            rounded-md
-            bg-black bg-opacity-30
-            hover:bg-opacity-50
-            cursor-pointer
-            mt-7
-            mb-12
-            text-sm
-          "
+          class="mx-auto w-24 px-3 py-2 text-center rounded-md bg-black bg-opacity-30 hover:bg-opacity-50 cursor-pointer mt-7 mb-12 text-sm"
         >
           Load more
         </div>
@@ -327,7 +257,8 @@ export default {
     openExternalUrl,
     async getHotspotInfos(address) {
       const res = await fetch(
-        'https://helium-api.stakejoy.com/v1/hotspots/' + address
+        'https://ugxlyxnlrg9udfdyzwnrvghlu2vydmvycg.blockjoy.com/v1/hotspots/' +
+          address
       )
       let { data } = await res.json()
 
@@ -371,14 +302,16 @@ export default {
 
     async getActivity(address) {
       const res = await fetch(
-        'https://helium-api.stakejoy.com/v1/hotspots/' + address + '/activity'
+        'https://ugxlyxnlrg9udfdyzwnrvghlu2vydmvycg.blockjoy.com/v1/hotspots/' +
+          address +
+          '/activity'
       )
       let { data, cursor } = await res.json()
       this.activity = data
 
       if (cursor) {
         const res2 = await fetch(
-          'https://helium-api.stakejoy.com/v1/hotspots/' +
+          'https://ugxlyxnlrg9udfdyzwnrvghlu2vydmvycg.blockjoy.com/v1/hotspots/' +
             address +
             '/activity?cursor=' +
             cursor
@@ -408,7 +341,7 @@ export default {
       this.loaded = false
       try {
         const res = await fetch(
-          'https://helium-api.stakejoy.com/v1/hotspots/' +
+          'https://ugxlyxnlrg9udfdyzwnrvghlu2vydmvycg.blockjoy.com/v1/hotspots/' +
             this.address +
             '/activity?cursor=' +
             this.nextCursor
@@ -452,7 +385,7 @@ export default {
 
     async getTotalRewards(minTime) {
       const res = await fetch(
-        'https://helium-api.stakejoy.com/v1/hotspots/' +
+        'https://ugxlyxnlrg9udfdyzwnrvghlu2vydmvycg.blockjoy.com/v1/hotspots/' +
           this.address +
           '/rewards/sum?min_time=' +
           minTime
@@ -484,7 +417,7 @@ export default {
         max_time: UTCTime.toISOString(),
       })
       const res = await fetch(
-        'https://helium-api.stakejoy.com/v1/hotspots/' +
+        'https://ugxlyxnlrg9udfdyzwnrvghlu2vydmvycg.blockjoy.com/v1/hotspots/' +
           this.address +
           '/rewards/sum?' +
           params.toString()

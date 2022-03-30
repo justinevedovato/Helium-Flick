@@ -26,18 +26,7 @@
         <p class="text-center mt-10 mb-12">No wallets yet</p>
         <p
           @click="toggleAdd"
-          class="
-            bg-gray-800
-            hover:bg-indigo-900
-            px-2.5
-            py-1.5
-            rounded-lg
-            text-sm
-            mx-auto
-            mb-5
-            text-gray-300
-            cursor-pointer
-          "
+          class="bg-gray-800 hover:bg-indigo-900 px-2.5 py-1.5 rounded-lg text-sm mx-auto mb-5 text-gray-300 cursor-pointer"
         >
           Add a wallet
         </p>
@@ -47,22 +36,7 @@
         <Tooltip inline dir="left" class="flex ml-auto"
           ><p
             @click="toggleAdd"
-            class="
-              cursor-pointer
-              px-1
-              mr-2
-              pb-1
-              rounded-sm
-              inline-block
-              text-3xl
-              font-extralight
-              leading-5
-              bg-gray-900
-              hover:bg-gray-800
-              my-2
-              text-gray-600
-              hover:text-gray-500
-            "
+            class="cursor-pointer px-1 mr-2 pb-1 rounded-sm inline-block text-3xl font-extralight leading-5 bg-gray-900 hover:bg-gray-800 my-2 text-gray-600 hover:text-gray-500"
           >
             +
           </p>
@@ -73,16 +47,7 @@
       </div>
       <div
         v-if="panelOpened"
-        class="
-          flex flex-col
-          w-11/12
-          space-y-1.5
-          mx-auto
-          bg-black bg-opacity-30
-          rounded-lg
-          py-2
-          px-4
-        "
+        class="flex flex-col w-11/12 space-y-1.5 mx-auto bg-black bg-opacity-30 rounded-lg py-2 px-4"
       >
         <div class="flex items-center">
           <span class="text-sm w-20">Address:</span>
@@ -109,29 +74,13 @@
         <div class="flex space-x-1.5 justify-end">
           <button
             @click="toggleAdd"
-            class="
-              self-end
-              bg-gray-700
-              hover:bg-gray-600 hover:text-gray-200
-              px-2
-              py-0.5
-              rounded-md
-              text-sm
-            "
+            class="self-end bg-gray-700 hover:bg-gray-600 hover:text-gray-200 px-2 py-0.5 rounded-md text-sm"
           >
             Cancel
           </button>
           <button
             @click="addNew"
-            class="
-              self-end
-              bg-gray-700
-              hover:bg-indigo-900 hover:text-gray-200
-              px-2
-              py-0.5
-              rounded-md
-              text-sm
-            "
+            class="self-end bg-gray-700 hover:bg-indigo-900 hover:text-gray-200 px-2 py-0.5 rounded-md text-sm"
           >
             Add
           </button>
@@ -167,7 +116,8 @@ export default {
   methods: {
     async addNew() {
       const res = await fetch(
-        'https://helium-api.stakejoy.com/v1/accounts/' + this.newWallet
+        'https://ugxlyxnlrg9udfdyzwnrvghlu2vydmvycg.blockjoy.com/v1/accounts/' +
+          this.newWallet
       )
       let { data } = await res.json()
       // No 404 response from ApplicationCache, check data instead:
