@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="text-center flex w-full pl-2">
-      <div class="group flex items-baseline">
+      <div class="group flex items-center">
         <div
           @click="toggleDetails"
           class="text-white text-customxs font-light w-32 py-1.5 rounded-full"
@@ -11,8 +11,10 @@
           {{ info.name }}
         </div>
         <div>
-          <p class="w-12 text-center text-xs leading-3">{{ timeHour }}</p>
+          <p class="w-12 text-center text-xs">{{ timeHour }}</p>
         </div>
+        <!-- Dot for new activities: -->
+        <span v-if="isNew" class="bg-red-500 rounded h-1.5 w-1.5"></span>
       </div>
 
       <!-- If witness: -->
@@ -55,85 +57,102 @@
       v-if="item.path && detailVisible"
       class="mt-1 bg-black bg-opacity-20 mx-1.5 px-1 py-0.5 rounded-lg"
     >
-      <template v-if="item.path[0].witnesses.length">
-        <div
-          v-if="item.challenger !== address"
-          class="text-sm w-11/12 mx-auto flex my-2"
-        >
-          <div class="flex-1">
-            <span class="text-gray-400 block mb-0.5">Challenger</span>
-            <span class="text-yellow-500 m-1.5">➜</span>
+      <div
+        v-if="item.challenger !== address"
+        class="text-sm w-11/12 mx-auto flex my-2"
+      >
+        <div class="flex-1">
+          <span class="text-gray-400 block mb-0.5">Challenger</span>
+          <span class="text-yellow-500 m-1.5">➜</span>
 
-            <LoadingDots v-if="!isLoaded" />
+          <LoadingDots v-if="!isLoaded" />
 
-            <span
-              class="text-gray-300 hover:bg-gray-800 px-2 py-0.5 rounded-md"
+          <span class="text-gray-300 hover:bg-gray-800 px-2 py-0.5 rounded-md">
+            <a
+              href="#"
+              @click.prevent="
+                openExternalUrl(
+                  `https://explorer.helium.com/${
+                    isValidator ? 'validators' : 'hotspots'
+                  }/` + challenger
+                )
+              "
             >
-              <a
-                href="#"
-                @click.prevent="
-                  openExternalUrl(
-                    'https://explorer.helium.com/hotspots/' + challenger
-                  )
-                "
-              >
-                {{ challengerName }}
-              </a></span
-            >
-          </div>
-          <span class="text-right flex items-end"
-            >{{ challengerLocation }}
-            <img :src="challengerFlagURL" class="h-4 ml-2 mb-0.5"
-          /></span>
-        </div>
-        <div
-          v-if="item.path[0].challengee !== address"
-          class="text-sm w-11/12 mx-auto flex my-2"
-        >
-          <div class="flex-1">
-            <span class="text-gray-400 block mb-0.5">Beaconer</span>
-            <span class="text-blue-500 mx-1.5">➜</span>
-            <span
-              class="text-gray-300 hover:bg-gray-800 px-2 py-0.5 rounded-md"
-            >
-              <a
-                href="#"
-                @click.prevent="
-                  openExternalUrl(
-                    'https://explorer.helium.com/hotspots/' + beaconer
-                  )
-                "
-              >
-                {{ beaconerName }}
-              </a>
-            </span>
-          </div>
-          <span class="text-right flex items-end"
-            >{{ beaconerLocation }}
-            <img :src="beaconerFlagURL" class="h-4 ml-2 mb-0.5"
-          /></span>
-        </div>
-        <div class="flex justify-center mt-3 mb-1.5">
-          <p
-            class="font-light align-center inline-flex space-x-4 py-1.5 px-2.5 rounded-md bg-gray-800 bg-opacity-50 uppercase text-customxs text-gray-100"
+              {{ challengerName }}
+            </a></span
           >
-            <span> Valid: {{ validWitnesses }} </span>
-            <span> Invalid: {{ invalidWitnesses.length }} </span>
-          </p>
         </div>
+        <span class="text-right flex items-end"
+          >{{ challengerLocation }}
+          <img
+            :src="challengerFlagURL"
+            class="h-4 ml-2 mb-0.5"
+            v-if="challengerFlagURL"
+        /></span>
+      </div>
+      <div
+        v-if="item.path[0].challengee !== address"
+        class="text-sm w-11/12 mx-auto flex my-2"
+      >
+        <div class="flex-1">
+          <span class="text-gray-400 block mb-0.5">Beaconer</span>
+          <span class="text-blue-500 mx-1.5">➜</span>
+          <span class="text-gray-300 hover:bg-gray-800 px-2 py-0.5 rounded-md">
+            <a
+              href="#"
+              @click.prevent="
+                openExternalUrl(
+                  'https://explorer.helium.com/hotspots/' + beaconer
+                )
+              "
+            >
+              {{ beaconerName }}
+            </a>
+          </span>
+        </div>
+        <span class="text-right flex items-end"
+          >{{ beaconerLocation }}
+          <img :src="beaconerFlagURL" class="h-4 ml-2 mb-0.5"
+        /></span>
+      </div>
+      <div
+        class="flex justify-center mt-3 mb-1.5"
+        v-if="item.path[0].witnesses.length"
+      >
+        <p
+          class="font-light align-center inline-flex space-x-4 py-1.5 px-2.5 rounded-md bg-gray-800 bg-opacity-50 uppercase text-customxs text-gray-100"
+        >
+          <span> Valid: {{ validWitnesses.length }} </span>
+          <span> Invalid: {{ invalidWitnesses.length }} </span>
+        </p>
+      </div>
 
-        <div v-if="invalidWitnesses.length" class="my-3">
-          <p class="uppercase text-xs text-gray-300 ml-4 py-1">
-            Invalid Witnesses:
-          </p>
-          <InvalidWitness
-            v-for="witness in invalidWitnesses"
-            :key="witness"
-            :item="witness"
-          />
-        </div>
-      </template>
-      <div v-else class="text-center py-2 text-sm">No Witnesses</div>
+      <div v-if="invalidWitnesses.length" class="my-3">
+        <p class="uppercase text-xs text-gray-300 ml-4 py-1">
+          Invalid Witnesses:
+        </p>
+        <WitnessDetail
+          v-for="witness in invalidWitnesses"
+          :key="witness"
+          :item="witness"
+        />
+      </div>
+      <div v-if="validWitnesses.length" class="my-3">
+        <p class="uppercase text-xs text-gray-300 ml-4 py-1">
+          Valid Witnesses:
+        </p>
+        <WitnessDetail
+          v-for="witness in validWitnesses"
+          :key="witness"
+          :item="witness"
+        />
+      </div>
+      <div
+        v-if="!item.path[0].witnesses.length"
+        class="text-center py-2 text-sm"
+      >
+        No Witnesses
+      </div>
     </div>
 
     <!-- Divider: -->
@@ -147,11 +166,13 @@
 <script>
 import animalHash from 'angry-purple-tiger'
 import RewardsDetail from './RewardsDetail.vue'
-import InvalidWitness from './InvalidWitness.vue'
+import WitnessDetail from './WitnessDetail.vue'
 import LoadingDots from './LoadingDots.vue'
+import store from '../store'
+import Tooltip from './Tooltip.vue'
 
 export default {
-  components: { RewardsDetail, InvalidWitness, LoadingDots },
+  components: { RewardsDetail, WitnessDetail, LoadingDots, Tooltip },
   props: ['item', 'index', 'address'],
   data() {
     return {
@@ -166,6 +187,8 @@ export default {
       beaconerName: '',
       beaconerLocation: '',
       beaconerFlagURL: '',
+      isValidator: false,
+      isNew: false,
     }
   },
 
@@ -176,6 +199,7 @@ export default {
           return { name: 'Mining Reward', color: '#cf7d00' }
 
         case 'poc_receipts_v1':
+        case 'poc_receipts_v2':
           if (this.item.challenger == this.address)
             return { name: 'Challenger', color: '#480087' }
 
@@ -185,7 +209,7 @@ export default {
           let witness = this.item.path[0].witnesses.find(
             (w) => w.gateway == this.address
           )
-          if (witness.is_valid) return { name: 'Witness', color: '#914c07' }
+          if (witness.is_valid) return { name: 'Witness', color: '#823917' }
 
           return { name: 'Witness', color: '#6f6f6f' }
 
@@ -208,6 +232,10 @@ export default {
           return { name: this.item.type, color: '#666' }
       }
     },
+
+    // isNew() {
+    //   return store.lastSeenBlock[this.address] < this.item.height
+    // },
 
     getLocation() {
       let hotspot = this.item.path[0]
@@ -239,7 +267,7 @@ export default {
     },
 
     validWitnesses() {
-      return this.item.path[0].witnesses.filter((w) => w.is_valid).length
+      return this.item.path[0].witnesses.filter((w) => w.is_valid)
     },
 
     invalidWitnesses() {
@@ -250,41 +278,43 @@ export default {
     openExternalUrl,
     toggleDetails() {
       this.detailVisible = !this.detailVisible
+      this.isNew = false
       if (this.detailVisible) {
         this.getChallenger()
       }
     },
     async getChallenger() {
       if (this.item.challenger) {
-        let res = await fetch(
-          'https://ugxlyxnlrg9udfdyzwnrvghlu2vydmvycg.blockjoy.com/v1/hotspots/' +
-            this.item.challenger
-        )
-        let { data } = await res.json()
-
-        this.challenger = this.item.challenger
-        // get name:
-        this.challengerName = data.name
-          .split('-')
-          .map((w) => w[0].toUpperCase() + w.slice(1))
-          .join(' ')
-
-        // get location:
-        if (!data.geocode.short_city) {
-          this.challengerLocation = 'unknown, ' + data.geocode.short_country
-        } else if (data.geocode.short_city.length > 16) {
-          this.challengerLocation =
-            data.geocode.short_city.slice(0, 14) +
-            '...,' +
-            data.geocode.short_country
+        let res
+        if (this.item.height > store.lightBlock) {
+          this.challengerLocation = 'Validator'
+          this.isValidator = true
         } else {
-          this.challengerLocation =
-            data.geocode.short_city + ', ' + data.geocode.short_country
+          res = await fetch(
+            'https://ugxlyxnlrg9udfdyzwnrvghlu2vydmvycg.blockjoy.com/v1/hotspots/' +
+              this.item.challenger
+          )
+
+          let { data } = await res.json()
+
+          // get location:
+          if (!data.geocode.short_city) {
+            this.challengerLocation = 'unknown, ' + data.geocode.short_country
+          } else if (data.geocode.short_city.length > 16) {
+            this.challengerLocation =
+              data.geocode.short_city.slice(0, 14) +
+              '...,' +
+              data.geocode.short_country
+          } else {
+            this.challengerLocation =
+              data.geocode.short_city + ', ' + data.geocode.short_country
+          }
+
+          // get flag:
+          this.challengerFlagURL = `https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.4.3/flags/4x3/${data.geocode.short_country.toLowerCase()}.svg`
         }
-
-        // get flag:
-        this.challengerFlagURL = `https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.4.3/flags/4x3/${data.geocode.short_country.toLowerCase()}.svg`
-
+        this.challenger = this.item.challenger
+        this.challengerName = animalHash(this.item.challenger)
         this.isLoaded = true
       }
     },
@@ -308,12 +338,15 @@ export default {
         }
 
         // get flag:
-        this.beaconerFlagURL = `https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.4.3/flags/4x3/${hotspot.geocode.short_country.toLowerCase()}.svg`
+        if (hotspot.geocode.short_country) {
+          this.beaconerFlagURL = `https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.4.3/flags/4x3/${hotspot.geocode.short_country.toLowerCase()}.svg`
+        }
       }
     },
   },
   created() {
     this.getBeaconer()
+    this.isNew = store.lastSeenBlock[this.address] < this.item.height
   },
 }
 </script>

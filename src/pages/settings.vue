@@ -65,7 +65,7 @@
         </div>
       </div>
       <p class="text-center h-4 mt-1">
-        <LoadingDots v-if="loaded" />
+        <LoadingDots v-if="loading" />
         <span v-else class="text-center text-sm"> {{ message }}</span>
       </p>
 
@@ -109,6 +109,7 @@
         </template>
       </draggable>
     </perfect-scrollbar>
+
     <Footer></Footer>
   </div>
 </template>
@@ -128,7 +129,7 @@ export default {
       address: '',
       user: '',
       message: '',
-      loaded: false,
+      loading: false,
       drag: false,
     }
   },
@@ -151,38 +152,36 @@ export default {
   methods: {
     toggle() {
       store.display.maker = !store.display.maker
-      localStorage.setItem('display', JSON.stringify(store.display))
     },
     saveNewList() {
       store.addresses = this.addresses
-      localStorage.setItem('addresses', JSON.stringify(store.addresses))
     },
     newName(address) {
       return animalHash(address)
     },
     async addFromAddress() {
-      this.loaded = true
-      const res = await fetch(
+      this.loading = true
+      let res = await fetch(
         'https://ugxlyxnlrg9udfdyzwnrvghlu2vydmvycg.blockjoy.com/v1/hotspots/' +
           this.address
       )
       // Check if the hotspot exists
+
       if (res.status == '404' || !this.address) {
-        this.loaded = false
+        this.loading = false
         this.message = "Sorry! This address doesn't exist"
         this.address = ''
       } else {
         store.addresses.push(this.address)
-        localStorage.setItem('addresses', JSON.stringify(store.addresses))
         this.address = ''
 
-        this.loaded = false
+        this.loading = false
         this.message = 'Your hotspot has been added!'
       }
     },
 
     async addFromUser() {
-      this.loaded = true
+      this.loading = true
       const res = await fetch(
         'https://ugxlyxnlrg9udfdyzwnrvghlu2vydmvycg.blockjoy.com/v1/accounts/' +
           this.user +
@@ -192,14 +191,13 @@ export default {
 
       // No 404 response from ApplicationCache, check data array instead:
       if (!data.length) {
-        this.loaded = false
+        this.loading = false
         this.message = "Sorry! This user doesn't exist"
         this.user = ''
       } else {
         let userAddresses = data.map((e) => e.address)
         store.addresses.push(...userAddresses)
-        localStorage.setItem('addresses', JSON.stringify(store.addresses))
-        this.loaded = false
+        this.loading = false
         this.message = 'All hotspots have been added!'
         this.user = ''
       }
@@ -211,12 +209,10 @@ export default {
           store.addresses.splice(i, 1)
           i--
         }
-        localStorage.setItem('addresses', JSON.stringify(store.addresses))
       }
     },
 
     clearAll() {
-      localStorage.removeItem('addresses')
       store.addresses = []
       this.addresses = []
     },

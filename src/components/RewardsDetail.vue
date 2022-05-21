@@ -1,19 +1,7 @@
 <template>
   <div class="mx-auto py-0.5 items-baseline">
     <div
-      class="
-        flex
-        text-white text-left
-        pl-3
-        text-customxs
-        font-light
-        w-11/12
-        mx-auto
-        border-b border-l
-        bg-gradient-to-tr
-        rounded-bl-md
-        py-1
-      "
+      class="flex text-white text-left pl-3 text-customxs font-light w-11/12 mx-auto border-b border-l bg-gradient-to-tr rounded-bl-md py-1"
       :style="{
         borderColor: info.color,
         backgroundImage: getGradient(info.color),

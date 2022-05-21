@@ -26,23 +26,18 @@
             <p class="text-white inline">
               {{ name }}
             </p>
-            <Tooltip inline class="ml-2">
+            <Tooltip v-if="loaded" inline class="ml-2">
               <span
-                v-if="loaded"
                 :class="{
                   'text-green-600': status == 'online',
                   'text-yellow-500 animate-pulse': status == 'syncing',
                   'text-red-700': status == 'offline',
                 }"
-                >●</span
-              >
+                >●
+              </span>
               <template #tooltip>
                 <span class="capitalize">{{ status }}</span>
               </template>
-            </Tooltip>
-            <Tooltip inline v-if="relayed" class="ml-1.5">
-              <span class="text-yellow-700">●</span>
-              <template #tooltip>Relayed</template>
             </Tooltip>
           </div>
 
@@ -50,33 +45,24 @@
             <span class="text-sm inline flex-1 h-6">
               {{ location }}
             </span>
-            <!-- <span
-              v-if="blocksLeft"
-              class="text-xs bg-gray-800 px-1.5 pb-0.5 rounded-md"
-              >{{ blocksLeft }}</span
-            > -->
+            <span v-if="!isLight" class="text-xs">{{ blocksLeft }}</span>
           </div>
         </div>
-        <!-- Spinner -->
-        <div v-if="!loaded" class="flex items-center justify-center h-16">
-          <div
-            class="loader ease-linear rounded-full border-4 border-t-4 border-gray-800 mr-3 h-12 w-12"
-          ></div>
-        </div>
+
         <div
-          v-else
           class="flex flex-col justify-center items-end pr-2 text-sm space-y-0.5"
         >
           <span
             class="bg-purple-900 bg-opacity-50 text-gray-100 py-0.5 px-2 rounded-full"
           >
-            <span class="text-gray-400 text-xs pr-1">Day</span>{{ rewardsDay }}
+            <span class="text-gray-400 text-xs pr-1">Day</span
+            >{{ item.rewards_day ? item.rewards_day.toFixed(2) : '0.00' }}
           </span>
           <span
             class="bg-indigo-900 bg-opacity-50 text-gray-100 py-0.5 px-2 rounded-full"
           >
             <span class="text-gray-400 text-xs pr-0.5">Total</span>
-            {{ rewardsTotal }}
+            {{ item.rewards_total ? item.rewards_total.toFixed(2) : '0.00' }}
           </span>
         </div>
       </div>
@@ -98,23 +84,18 @@ export default {
     return {
       status: '',
       blocksLeft: '',
-      relayed: false,
       location: '',
-      rewardsTotal: '',
       rewardsDay: '',
-      timestampAdded: '',
-      loaded: false,
-      timer: '',
-      brand: '',
+      loaded: '',
     }
   },
 
   computed: {
     link() {
-      return '/hotspot/' + this.item
+      return '/hotspot/' + this.item.address
     },
     name() {
-      let n = animalHash(this.item)
+      let n = animalHash(this.item.address)
       if (n.length > 29) {
         return n.slice(0, 25) + '...'
       } else return n
@@ -122,57 +103,39 @@ export default {
     showMaker() {
       return store.display.maker
     },
+    timestampAdded() {
+      return this.item.timestamp_added.split('.')[0] + 'Z'
+    },
+
+    brand() {
+      return getBrand(this.item.payer)
+    },
+
+    isLight() {
+      return this.item.status.height > store.lightBlock
+    },
+
+    status() {
+      if (this.item.status.online !== 'offline' && !this.isLight) {
+        return 'syncing'
+      } else {
+        return this.item.status.online
+      }
+    },
   },
 
   methods: {
-    async getHotspotInfos(address) {
-      const res = await fetch(
-        'https://ugxlyxnlrg9udfdyzwnrvghlu2vydmvycg.blockjoy.com/v1/hotspots/' +
-          address
-      )
-      let { data } = await res.json()
-      this.timestampAdded = data.timestamp_added.split('.')[0] + 'Z'
-
-      // Brand:
-      this.brand = getBrand(data.payer)
-
-      // Status:
-      // Check if miner is LongAP:
-      let longAP = '12zX4jgDGMbJgRwmCfRNGXBuphkQRqkUTcLzYHTQvd4Qgu8kiL4'
-      let response
-
-      if (data.payer == longAP) {
-        response = await getLongAPStatus(address)
-        this.status = response[0].status
-        if (response[0] && response[0].miner && response[0].miner.natType) {
-          if (!['none', 'static'].includes(response[0].miner.natType)) {
-            this.relayed = true
-          }
-        }
-      }
-      // If not LongAP or if API call has failed:
-      if (response == 'failed' || data.payer !== longAP) {
-        this.status = data.status.online
-        if (
-          data.status.listen_addrs &&
-          data.status.listen_addrs[0] &&
-          data.status.listen_addrs[0].includes('p2p')
-        ) {
-          this.relayed = true
-        }
-        if (
-          data.block - data.status.height > 500 &&
-          data.status.online != 'offline'
-        ) {
-          this.status = 'syncing'
-          // this.blocksLeft = data.block - data.status.height + " left"
-        }
+    getHotspotInfos(hotspot) {
+      this.loaded = true
+      if (!this.isLight && hotspot.status.online !== 'offline') {
+        this.blocksLeft =
+          store.lightBlock - hotspot.status.height + ' blocks left'
       }
 
       // Location:
-      if (data.geocode.long_city) {
+      if (hotspot.geocode.long_city) {
         this.location =
-          data.geocode.long_city + ', ' + data.geocode.short_country
+          hotspot.geocode.long_city + ', ' + hotspot.geocode.short_country
         if (this.location.length > 22 && this.blocksLeft) {
           this.location = this.location.slice(0, 21) + '...'
         } else if (this.location.length > 30) {
@@ -182,68 +145,10 @@ export default {
         this.location = 'No location set'
       }
     },
-
-    async getRewards(address) {
-      const res = await fetch(
-        'https://ugxlyxnlrg9udfdyzwnrvghlu2vydmvycg.blockjoy.com/v1/hotspots/' +
-          address +
-          '/rewards/sum?min_time=' +
-          this.timestampAdded
-      )
-      let body = await res.json()
-      this.rewardsTotal = body.data.total.toFixed('2')
-    },
-
-    async getDailyRewards(address) {
-      let nowTime = new Date()
-      nowTime.setHours(23)
-      nowTime.setMinutes(59)
-      nowTime.setSeconds(59)
-      let UTCTime = new Date(
-        Date.UTC(
-          nowTime.getUTCFullYear(),
-          nowTime.getUTCMonth(),
-          nowTime.getUTCDate(),
-          nowTime.getUTCHours(),
-          nowTime.getUTCMinutes(),
-          nowTime.getUTCSeconds()
-        )
-      )
-      let params = new URLSearchParams({
-        bucket: 'day',
-        min_time: '-30 day',
-        max_time: UTCTime.toISOString(),
-      })
-      const res = await fetch(
-        'https://ugxlyxnlrg9udfdyzwnrvghlu2vydmvycg.blockjoy.com/v1/hotspots/' +
-          address +
-          '/rewards/sum?' +
-          params.toString()
-      )
-      let { data } = await res.json()
-
-      this.rewardsDay = data[0].total.toFixed('2')
-    },
-    async reload() {
-      this.loaded = false
-      await this.updateData()
-      this.loaded = true
-    },
-    async updateData() {
-      await this.getHotspotInfos(this.item)
-      await this.getRewards(this.item)
-      await this.getDailyRewards(this.item)
-    },
   },
-  async created() {
-    this.timer = setInterval(this.updateData, 600000)
-    await this.updateData()
 
-    // Show when the rest is loaded
-    this.loaded = true
-  },
-  beforeUnmount() {
-    clearInterval(this.timer)
+  created() {
+    this.getHotspotInfos(this.item)
   },
 }
 </script>

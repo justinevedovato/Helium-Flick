@@ -21,9 +21,6 @@
           >
             <div class="h-2 w-2 mr-2" :class="hotspot.brand.color"></div>
             <span>{{ hotspot.brand.name }} </span>
-            <!-- <span v-if="hotspot.model" class="ml-2 text-gray-500">
-              ({{ hotspot.model }})</span
-            > -->
           </a>
         </div>
 
@@ -60,10 +57,6 @@
                 <span class="capitalize">{{ hotspot.status }}</span>
               </template>
             </Tooltip>
-            <Tooltip inline dir="bottom" v-if="hotspot.relayed" class="ml-1.5">
-              <span class="text-yellow-700">●</span>
-              <template #tooltip>Relayed</template>
-            </Tooltip>
           </div>
 
           <div class="flex flex-col text-white mt-2.5">
@@ -94,7 +87,6 @@
         </div>
       </div>
 
-      <!-- Activity feed:  -->
       <perfect-scrollbar class="list flex-1 px-2 pb-3">
         <div class="flex">
           <div
@@ -127,7 +119,8 @@
           No activity
         </p>
 
-        <div v-else v-for="(group, date) of activity2" :key="date">
+        <!-- Activity feed:  -->
+        <div v-else v-for="(group, date) of activityPerDay" :key="date">
           <h2
             @click="toggleDay(date)"
             class="text-gray-200 my-1 py-0.5 cursor-pointer"
@@ -139,11 +132,15 @@
             <span
               v-if="!daysClosed.includes(date)"
               class="text-gray-700 text-customxs mx-1 cursor-pointer"
-              >▼</span
             >
-            <span v-else class="text-gray-700 text-customxs mx-1 cursor-pointer"
-              >►</span
+              ▼
+            </span>
+            <span
+              v-else
+              class="text-gray-700 text-customxs mx-1 cursor-pointer"
             >
+              ►
+            </span>
 
             {{ date }}
           </h2>
@@ -155,7 +152,7 @@
             :style="{ '--total': group.items }"
           > -->
           <div
-            v-if="!daysClosed.includes(date)"
+            v-show="!daysClosed.includes(date)"
             :class="{
               'border-l-2 border-gray-800 border-opacity-50':
                 !daysClosed.includes(date),
@@ -207,6 +204,7 @@ import prettyms from 'pretty-ms'
 import LoadingDots from '~/components/LoadingDots.vue'
 import Tooltip from '~/components/Tooltip.vue'
 import { getBrand } from '~/utils'
+import store from '../../store'
 
 export default {
   components: { Activity, MonthlyChart, LoadingDots, Tooltip },
@@ -226,7 +224,7 @@ export default {
         brandAddress: '',
       },
       activity: [],
-      activity2: {},
+      activityPerDay: {},
       daysClosed: [],
       nextCursor: '',
       loaded: false,
@@ -288,10 +286,7 @@ export default {
         ) {
           this.hotspot.relayed = true
         }
-        if (
-          data.block - data.status.height > 500 &&
-          data.status.online != 'offline'
-        ) {
+        if (data.status.height < 1350664 && data.status.online != 'offline') {
           this.hotspot.status = 'syncing'
         }
       }
@@ -359,7 +354,7 @@ export default {
     },
 
     sortByDate() {
-      this.activity2 = this.activity.reduce((acc, item) => {
+      this.activityPerDay = this.activity.reduce((acc, item) => {
         const date = new Date(item.time * 1000)
 
         const dateString = date.toLocaleDateString(navigator.language, {
@@ -441,6 +436,7 @@ export default {
       clearInterval(this.timerPage)
       clearInterval(this.timerLatest)
       this.loaded = false
+      this.saveLastSeen()
       await this.updateData()
       this.loaded = true
     },
@@ -454,6 +450,11 @@ export default {
         this.getActivity(this.address), // Activity feed
       ])
     },
+    saveLastSeen() {
+      if (this.activity[0]) {
+        store.lastSeenBlock[this.address] = this.activity[0].height
+      }
+    },
   },
   async created() {
     await this.updateData()
@@ -461,10 +462,15 @@ export default {
     this.timerPage = setInterval(this.updateData, 600000) // Every 10 minutes
     this.timerLatest = setInterval(this.getLatestTime, 30000) // Every 30 seconds
     this.loaded = true
+
+    window.addEventListener('beforeunload', () => {
+      this.saveLastSeen()
+    })
   },
   beforeUnmount() {
     clearInterval(this.timerPage)
     clearInterval(this.timerLatest)
+    this.saveLastSeen()
   },
 }
 </script>
