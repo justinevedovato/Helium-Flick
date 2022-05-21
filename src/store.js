@@ -1,12 +1,13 @@
 import { reactive } from 'vue'
+import { useStorage } from '@vueuse/core'
 
 export default reactive({
-  addresses: [],
+  addresses: useStorage('addresses', []),
   hotspots: {},
-  wallets: [],
+  wallets: useStorage('wallets', []),
   versions: {},
-  display: {
-    maker: true,
-  },
-  oraclePrice: ''
+  display: useStorage('display', { maker: true }),
+  oraclePrice: '',
+  lightBlock: 1350664,
+  lastSeenBlock: useStorage('lastSeenBlock', {}),
 })

@@ -84,19 +84,6 @@ export default {
     },
   },
   created() {
-    const allHotspots = JSON.parse(localStorage.getItem('addresses'))
-    store.addresses = allHotspots || []
-
-    const allWallets = JSON.parse(localStorage.getItem('wallets'))
-    store.wallets = allWallets || []
-
-    // Show brand
-    const display = JSON.parse(localStorage.getItem('display'))
-    if (display) {
-      // Get default from the store, but keep user's changed values:
-      store.display = Object.assign({}, store.display, display)
-    }
-
     this.timer = setInterval(this.updateData, 3600000) // Every hour
     this.updateData()
   },

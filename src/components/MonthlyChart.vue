@@ -5,14 +5,19 @@
     :options="options"
     :width="224"
     :height="80"
+    ref="chartRef"
   />
 </template>
 
 <script setup>
 import { computed, ref } from 'vue'
 import { BarChart, LineChart } from 'vue-chart-3'
+import AnnotationPlugin from 'chartjs-plugin-annotation'
 import { Chart, registerables } from 'chart.js'
-Chart.register(...registerables)
+
+Chart.register(...registerables, AnnotationPlugin)
+
+const chartRef = ref()
 
 const props = defineProps({
   type: {
@@ -39,19 +44,42 @@ const chartData = computed(() => ({
     d.setDate(d.getDate() - (props.data.length - 1 - i))
     return d.toLocaleDateString()
   }),
-
   datasets: [
     {
       data: props.data,
       backgroundColor: props.color,
       borderColor: props.color,
+      order: 2,
+    },
+    {
+      label: 'average',
+      data: -0.4,
+      type: 'line',
+      borderColor: '#FF312D',
+      // fill: false,
+      borderWidth: 1,
+      order: 1,
     },
   ],
 }))
 
+const averageLine = {
+  type: 'line',
+  borderColor: 'green',
+  borderWidth: 2,
+  // label: {
+  //   enabled: true,
+  //   content: 0.4,
+  //   position: 'end',
+  // },
+  scaleID: 'y',
+  value: 0.4,
+}
+
 const options = ref({
   responsive: true,
   plugins: {
+    autocolors: false,
     legend: { display: false },
     tooltip: {
       displayColors: false,
@@ -59,6 +87,11 @@ const options = ref({
         label: (context) => context.parsed.y.toFixed(2) + ' HNT',
       },
     },
+    // annotation: {
+    //   annotations: {
+    //     averageLine,
+    //   },
+    // },
   },
   scales: {
     xAxes: {

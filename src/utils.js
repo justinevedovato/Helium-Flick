@@ -27,7 +27,7 @@ export function getBrand(id) {
   } else if (id == '14NBXJE5kAAZTMigY4dcjXSMG4CSqjYwvteQWwQsYhsu2TKN6AF') {
     return {
       name: 'SenseCAP',
-      color: 'bg-seagreen',
+      color: 'bg-[#349f58]',
     }
   } else if (id == '14fzfjFcHpDR1rTH8BNPvSi5dKBbgxaDnmsVPbCjuq9ENjpZbxh') {
     return {
@@ -42,7 +42,7 @@ export function getBrand(id) {
   } else if (id == '12zX4jgDGMbJgRwmCfRNGXBuphkQRqkUTcLzYHTQvd4Qgu8kiL4') {
     return {
       name: 'LongAP',
-      color: 'bg-blumine',
+      color: 'bg-[#1a6985]',
     }
   } else if (id == '13Mpg5hCNjSxHJvWjaanwJPBuTXu1d4g5pGvGBkqQe3F8mAwXhK') {
     return {
@@ -87,12 +87,12 @@ export function getBrand(id) {
   } else if (id == '13XuP2DjHEHVkKguDDZD2ev5AeqMLuJ8UQ44efEcDmVTnBcvc6F') {
     return {
       name: 'ClodPi',
-      color: 'bg-eastblue',
+      color: 'bg-[#2596be]',
     }
   } else if (id == '14go8hvEDnotWTyhYv6Hu5PTnRUAQzJqbB6dsDm1oThkCcZe9zd') {
     return {
       name: 'Controllino',
-      color: 'bg-corn',
+      color: 'bg-[#D0ce00]',
     }
   } else {
     return {

@@ -55,10 +55,7 @@
 
     <div class="flex w-full mx-2 h-28 overflow-hidden mb-2 items-center">
       <div class="flex flex-col justify-center">
-        <div
-          v-if="hotspots"
-          class="divide divide-x divide-gray-500 text-sm mx-auto mb-1"
-        >
+        <div class="divide divide-x divide-gray-500 text-sm mx-auto mb-1">
           <span
             @click="showRewards = false"
             class="px-2 cursor-pointer"
@@ -75,37 +72,49 @@
               'text-gray-400': !showRewards,
               'text-gray-200 underline': showRewards,
             }"
-            >Rewards
+          >
+            Rewards
           </span>
         </div>
         <div
           class="mx-auto bg-black mt-1 bg-opacity-20 rounded-md flex text-sm"
         >
-          <MonthlyChart
-            v-if="showRewards"
-            :data="rewardsMonth"
-            :color="[
-              '#533975',
-              '#5f4885',
-              '#775f9e',
-              '#7d6da8',
-              '#a191c2',
-              '#bfb2d4',
-              '#cac1de',
-            ]"
-          />
-          <MonthlyChart
-            v-if="!tooRecent && !showRewards"
-            type="line"
-            :data="balanceMonth"
-            :color="['#85092e']"
-          />
-          <span
-            v-if="tooRecent && !showRewards"
-            class="mx-auto rounded-md flex text-sm h-20 w-56 justify-center items-center"
-          >
-            Not enough data
-          </span>
+          <div v-if="showRewards">
+            <MonthlyChart
+              v-if="!noRewards"
+              :data="rewardsMonth"
+              :color="[
+                '#533975',
+                '#5f4885',
+                '#775f9e',
+                '#7d6da8',
+                '#a191c2',
+                '#bfb2d4',
+                '#cac1de',
+              ]"
+            />
+
+            <span
+              v-else
+              class="mx-auto rounded-md flex text-sm h-20 w-56 justify-center items-center"
+            >
+              No recent rewards
+            </span>
+          </div>
+          <div v-else>
+            <MonthlyChart
+              v-if="!noData"
+              type="line"
+              :data="balanceMonth"
+              :color="['#85092e']"
+            />
+            <span
+              v-else
+              class="mx-auto rounded-md flex text-sm h-20 w-56 justify-center items-center"
+            >
+              Not enough data
+            </span>
+          </div>
         </div>
       </div>
       <div v-if="loaded" class="flex flex-1 flex-col items-center">
@@ -153,7 +162,8 @@ export default {
       showDel: false,
       hotspots: '',
       oraclePrice: '',
-      tooRecent: false,
+      noData: false,
+      noRewards: false,
     }
   },
 
@@ -166,20 +176,11 @@ export default {
       )
       let { data } = await res.json()
       this.balance = (data.balance / 100000000).toFixed(2)
+      this.hotspots = data.hotspot_count
       this.oraclePrice = (
         (data.balance / 100000000) *
         (store.oraclePrice / 100000000)
       ).toFixed(2)
-    },
-
-    async getWalletHotspots() {
-      const res = await fetch(
-        'https://ugxlyxnlrg9udfdyzwnrvghlu2vydmvycg.blockjoy.com/v1/accounts/' +
-          this.item.id +
-          '/hotspots'
-      )
-      let { data } = await res.json()
-      this.hotspots = data.length
     },
 
     async getMonthlyBalance() {
@@ -190,10 +191,12 @@ export default {
             '/stats'
         )
         let { data } = await res.json()
+        // console.log(this.item.label, data)
         let monthAll = data.last_month
         this.balanceMonth = monthAll.map((r) => r.balance / 100000000).reverse()
-      } catch (e) {
-        this.tooRecent = true
+      } catch (error) {
+        console.log(error)
+        this.noData = true
         this.showRewards = true
       }
     },
@@ -204,7 +207,6 @@ export default {
           store.wallets.splice(i, 1)
           i--
         }
-        localStorage.setItem('wallets', JSON.stringify(store.wallets))
       }
       this.showDel = false
     },
@@ -236,6 +238,9 @@ export default {
           params.toString()
       )
       let { data } = await res.json()
+      // Calculates total of monthly rewards to detect if the chart will be empty or not:
+      this.noRewards = data.map((r) => r.total).reduce((a, b) => a + b, 0) == 0
+      console.log(this.item.label, this.noRewards)
       this.rewardsMonth = data.map((r) => r.total).reverse() // For the graph
     },
     async reload() {
@@ -245,7 +250,6 @@ export default {
     },
     async updateData() {
       await this.geWalletInfos()
-      await this.getWalletHotspots()
       await this.getRewards()
     },
   },

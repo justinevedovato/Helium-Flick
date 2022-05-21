@@ -140,7 +140,6 @@ export default {
             showRewards: false,
           })
         }
-        localStorage.setItem('wallets', JSON.stringify(store.wallets))
         this.newWallet = ''
         this.message = ''
         this.newLabel = ''
