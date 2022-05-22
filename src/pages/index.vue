@@ -141,6 +141,26 @@ export default {
       data.rewards_total = this.allHotspotsObj[address]?.rewards_total || 0
       data.rewards_day = this.allHotspotsObj[address]?.rewards_day || 0
 
+      // Check if miner is LongAP:
+      let longAP = '12zX4jgDGMbJgRwmCfRNGXBuphkQRqkUTcLzYHTQvd4Qgu8kiL4'
+      let response
+      if (data.payer == longAP) {
+        response = await getLongAPStatus(address)
+        data.new_status = response[0].status
+      }
+
+      // If not LongAP or if API call has failed:
+      if (response == 'failed' || data.payer !== longAP) {
+        if (
+          data.status.height < store.lightBlock &&
+          data.status.online !== 'offline'
+        ) {
+          data.new_status = 'syncing'
+        } else {
+          data.new_status = data.status.online
+        }
+      }
+
       this.allHotspotsObj[address] = data
     },
 
@@ -201,7 +221,6 @@ export default {
       })
 
       await Promise.allSettled(promises)
-      console.log('updated')
       this.sortHotspots(this.sortValue)
     },
   },
@@ -221,7 +240,6 @@ export default {
 
   beforeUnmount() {
     clearInterval(this.timer)
-    console.log('timer cleared')
   },
 
   watch: {

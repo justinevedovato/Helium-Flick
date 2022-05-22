@@ -20,9 +20,7 @@
             ></div>
           </template>
           <div class="h-full flex-1 flex-col px-3 pt-2">
-            <p class="text-white inline mt-2">
-              {{ name }}
-            </p>
+            <p class="text-white inline mt-2">{{ name }}</p>
             <span class="ml-2 text-gray-600 animate-pulse">●</span>
           </div>
           <!-- Spinner -->
@@ -48,20 +46,19 @@
 
           <div class="flex flex-1 flex-col px-3">
             <div class="flex items-baseline">
-              <p class="text-white inline">
-                {{ name }}
-              </p>
-              <Tooltip v-if="loaded" inline class="ml-2">
+              <p class="text-white inline">{{ name }}</p>
+              <Tooltip inline class="ml-2">
                 <span
                   :class="{
-                    'text-green-600': status == 'online',
-                    'text-yellow-500 animate-pulse': status == 'syncing',
-                    'text-red-700': status == 'offline',
+                    'text-green-600': item.new_status == 'online',
+                    'text-yellow-500 animate-pulse':
+                      item.new_status == 'syncing',
+                    'text-red-700': item.new_status == 'offline',
                   }"
                   >●
                 </span>
                 <template #tooltip>
-                  <span class="capitalize">{{ status }}</span>
+                  <span class="capitalize">{{ item.new_status }}</span>
                 </template>
               </Tooltip>
             </div>
@@ -110,7 +107,7 @@ export default {
     return {
       blocksLeft: '',
       location: '',
-      rewardsDay: '',
+      status: '',
       loaded: '',
     }
   },
@@ -144,22 +141,14 @@ export default {
       if (!this.hasHotspotItem) return ''
       return this.item.status.height > store.lightBlock
     },
-
-    status() {
-      if (!this.hasHotspotItem) return ''
-      if (this.item.status.online !== 'offline' && !this.isLight) {
-        return 'syncing'
-      } else {
-        return this.item.status.online
-      }
-    },
   },
 
   methods: {
-    getHotspotInfos(hotspot) {
+    async getHotspotInfos(hotspot) {
       if (!this.hasHotspotItem) return
       this.loaded = true
-      if (!this.isLight && hotspot.status.online !== 'offline') {
+
+      if (hotspot.new_status == 'syncing') {
         this.blocksLeft =
           store.lightBlock - hotspot.status.height + ' blocks left'
       }
@@ -184,8 +173,6 @@ export default {
       this.getHotspotInfos(this.item)
     },
   },
-  // created() {
-  // },
 }
 </script>
 

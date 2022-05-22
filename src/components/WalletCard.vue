@@ -191,7 +191,6 @@ export default {
             '/stats'
         )
         let { data } = await res.json()
-        // console.log(this.item.label, data)
         let monthAll = data.last_month
         this.balanceMonth = monthAll.map((r) => r.balance / 100000000).reverse()
       } catch (error) {
@@ -240,7 +239,7 @@ export default {
       let { data } = await res.json()
       // Calculates total of monthly rewards to detect if the chart will be empty or not:
       this.noRewards = data.map((r) => r.total).reduce((a, b) => a + b, 0) == 0
-      console.log(this.item.label, this.noRewards)
+
       this.rewardsMonth = data.map((r) => r.total).reverse() // For the graph
     },
     async reload() {

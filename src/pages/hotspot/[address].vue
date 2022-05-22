@@ -270,11 +270,6 @@ export default {
       if (data.payer == longAP) {
         response = await getLongAPStatus(address)
         this.hotspot.status = response[0].status
-        if (response[0].miner && response[0].miner.natType) {
-          if (!['none', 'static'].includes(response[0].miner.natType)) {
-            this.hotspot.relayed = true
-          }
-        }
       }
       // If not LongAP or if API call has failed:
       if (response == 'failed' || data.payer !== longAP) {
