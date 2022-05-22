@@ -4,7 +4,7 @@
       class="text-white text-left pl-2 text-customxs font-light w-full border-b border-l bg-gradient-to-tr to-transparent via-transparent rounded-bl-md py-1"
       :class="[
         isValid
-          ? 'border-emerald-700 from-emerald-900'
+          ? 'border-emerald-800 from-emerald-900'
           : 'border-gray-600 from-gray-700',
       ]"
     >

@@ -5,7 +5,7 @@
     <div class="absolute right-1 top-2 items-center flex">
       <Tooltip inline dir="left" class="mr-1.5">
         <img
-          @click="refreshHotspots"
+          @click="updateData"
           src="../assets/refresh.svg"
           alt="Refresh"
           class="h-6 opacity-40 hover:opacity-70 cursor-pointer mx-auto"
@@ -17,14 +17,14 @@
       <div>
         <select
           v-model="sortValue"
-          class="flex border pb-0.5 border-gray-800 rounded bg-gray-900 pr-1"
+          class="flex border outline-none pb-0.5 border-gray-800 rounded bg-gray-900 pr-1"
         >
-          <option>Sort by</option>
-          <option disabled>----------</option>
-          <option value="default">Default</option>
-          <option value="status">Status</option>
-          <option value="day">Daily HNT</option>
-          <option value="total">Total HNT</option>
+          <optgroup label="Sort by">
+            <option value="default">Default</option>
+            <option value="status">Status</option>
+            <option value="day">Daily HNT</option>
+            <option value="total">Total HNT</option>
+          </optgroup>
         </select>
       </div>
       <span v-if="!loaded">
@@ -81,7 +81,7 @@ export default {
     },
 
     loaded() {
-      return this.allHotspots.length == this.addresses.length
+      return true // this.allHotspots.length == this.addresses.length
     },
   },
   methods: {
@@ -108,11 +108,7 @@ export default {
 
         onlineArr.concat(offlineArr).forEach((h) => {
           newObj[h.address] = h
-          console.log(h.status.online)
         })
-
-        console.log('online:', onlineArr)
-        console.log('offline:', offlineArr)
 
         // Sort by earnings:
       } else if (sortBy == 'day' || sortBy == 'total') {
@@ -141,6 +137,10 @@ export default {
           address
       )
       let { data } = await res.json()
+
+      data.rewards_total = this.allHotspotsObj[address]?.rewards_total || 0
+      data.rewards_day = this.allHotspotsObj[address]?.rewards_day || 0
+
       this.allHotspotsObj[address] = data
     },
 
@@ -185,26 +185,38 @@ export default {
       this.allHotspotsObj[address].rewards_day = data[0].total
     },
 
-    updateData() {
+    async updateData() {
+      if (!this.addresses) return
+      let promises = []
+
       this.addresses.forEach((a) => {
-        this.getTotalRewards(a)
-        this.getDailyRewards(a)
+        promises.push(
+          new Promise(async (resolve) => {
+            await this.getHotspotInfos(a)
+            await this.getTotalRewards(a)
+            await this.getDailyRewards(a)
+            resolve()
+          })
+        )
       })
+
+      await Promise.allSettled(promises)
       console.log('updated')
       this.sortHotspots(this.sortValue)
     },
   },
 
-  created() {
-    this.timer = setInterval(this.updateData, 5000)
-  },
-
   async created() {
-    if (this.addresses.length) {
-      this.addresses.forEach((a) => {
-        this.getHotspotInfos(a)
+    if (this.addresses) {
+      let preparedHotspots = {}
+      this.addresses.forEach((address) => {
+        preparedHotspots[address] = { address }
       })
+      this.allHotspotsObj = preparedHotspots
     }
+
+    this.updateData()
+    this.timer = setInterval(this.updateData, 60_000 * 5)
   },
 
   beforeUnmount() {

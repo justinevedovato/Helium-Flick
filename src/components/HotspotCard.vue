@@ -10,61 +10,87 @@
       <div
         class="card flex w-full hover:bg-gray-800 mx-2 rounded-md h-16 overflow-hidden items-center"
       >
-        <Tooltip v-if="showMaker" class="w-2 h-full">
-          <div
-            class="h-full opacity-60 brand-color"
-            style="width: 7px"
-            :class="brand.color"
-          ></div>
-          <template #tooltip>
-            <span class="whitespace-nowrap">{{ brand.name }}</span>
+        <!-- When there is no data to show yet: -->
+        <template v-if="!hasHotspotItem">
+          <template v-if="showMaker">
+            <div
+              class="h-full opacity-60 bg-gray-800"
+              style="width: 7px"
+              :class="brand.color"
+            ></div>
           </template>
-        </Tooltip>
-
-        <div class="flex flex-1 flex-col px-3">
-          <div class="flex items-baseline">
-            <p class="text-white inline">
+          <div class="h-full flex-1 flex-col px-3 pt-2">
+            <p class="text-white inline mt-2">
               {{ name }}
             </p>
-            <Tooltip v-if="loaded" inline class="ml-2">
-              <span
-                :class="{
-                  'text-green-600': status == 'online',
-                  'text-yellow-500 animate-pulse': status == 'syncing',
-                  'text-red-700': status == 'offline',
-                }"
-                >●
+            <span class="ml-2 text-gray-600 animate-pulse">●</span>
+          </div>
+          <!-- Spinner -->
+          <div class="flex items-center justify-center h-16">
+            <div
+              class="loader ease-linear rounded-full border-4 border-t-4 border-gray-800 mr-3 h-12 w-12"
+            ></div>
+          </div>
+        </template>
+
+        <!-- After data arrives: -->
+        <template v-else>
+          <Tooltip v-if="showMaker" class="w-2 h-full">
+            <div
+              class="h-full opacity-60 brand-color"
+              style="width: 7px"
+              :class="brand.color"
+            ></div>
+            <template #tooltip>
+              <span class="whitespace-nowrap">{{ brand.name }}</span>
+            </template>
+          </Tooltip>
+
+          <div class="flex flex-1 flex-col px-3">
+            <div class="flex items-baseline">
+              <p class="text-white inline">
+                {{ name }}
+              </p>
+              <Tooltip v-if="loaded" inline class="ml-2">
+                <span
+                  :class="{
+                    'text-green-600': status == 'online',
+                    'text-yellow-500 animate-pulse': status == 'syncing',
+                    'text-red-700': status == 'offline',
+                  }"
+                  >●
+                </span>
+                <template #tooltip>
+                  <span class="capitalize">{{ status }}</span>
+                </template>
+              </Tooltip>
+            </div>
+
+            <div class="flex w-full items-center mt-0.5">
+              <span class="text-sm inline flex-1 h-6">
+                {{ location }}
               </span>
-              <template #tooltip>
-                <span class="capitalize">{{ status }}</span>
-              </template>
-            </Tooltip>
+              <span v-if="!isLight" class="text-xs">{{ blocksLeft }}</span>
+            </div>
           </div>
 
-          <div class="flex w-full items-center mt-0.5">
-            <span class="text-sm inline flex-1 h-6">
-              {{ location }}
+          <div
+            class="flex flex-col justify-center items-end pr-2 text-sm space-y-0.5"
+          >
+            <span
+              class="bg-purple-900 bg-opacity-50 text-gray-100 py-0.5 px-2 rounded-full"
+            >
+              <span class="text-gray-400 text-xs pr-1">Day</span
+              >{{ item.rewards_day.toFixed(2) }}
             </span>
-            <span v-if="!isLight" class="text-xs">{{ blocksLeft }}</span>
+            <span
+              class="bg-indigo-900 bg-opacity-50 text-gray-100 py-0.5 px-2 rounded-full"
+            >
+              <span class="text-gray-400 text-xs pr-0.5">Total</span>
+              {{ item.rewards_total.toFixed(2) }}
+            </span>
           </div>
-        </div>
-
-        <div
-          class="flex flex-col justify-center items-end pr-2 text-sm space-y-0.5"
-        >
-          <span
-            class="bg-purple-900 bg-opacity-50 text-gray-100 py-0.5 px-2 rounded-full"
-          >
-            <span class="text-gray-400 text-xs pr-1">Day</span
-            >{{ item.rewards_day ? item.rewards_day.toFixed(2) : '0.00' }}
-          </span>
-          <span
-            class="bg-indigo-900 bg-opacity-50 text-gray-100 py-0.5 px-2 rounded-full"
-          >
-            <span class="text-gray-400 text-xs pr-0.5">Total</span>
-            {{ item.rewards_total ? item.rewards_total.toFixed(2) : '0.00' }}
-          </span>
-        </div>
+        </template>
       </div>
     </router-link>
   </div>
@@ -82,7 +108,6 @@ export default {
   props: ['item'],
   data() {
     return {
-      status: '',
       blocksLeft: '',
       location: '',
       rewardsDay: '',
@@ -91,6 +116,9 @@ export default {
   },
 
   computed: {
+    hasHotspotItem() {
+      return !!this.item.name
+    },
     link() {
       return '/hotspot/' + this.item.address
     },
@@ -104,6 +132,7 @@ export default {
       return store.display.maker
     },
     timestampAdded() {
+      if (!this.hasHotspotItem) return ''
       return this.item.timestamp_added.split('.')[0] + 'Z'
     },
 
@@ -112,10 +141,12 @@ export default {
     },
 
     isLight() {
+      if (!this.hasHotspotItem) return ''
       return this.item.status.height > store.lightBlock
     },
 
     status() {
+      if (!this.hasHotspotItem) return ''
       if (this.item.status.online !== 'offline' && !this.isLight) {
         return 'syncing'
       } else {
@@ -126,6 +157,7 @@ export default {
 
   methods: {
     getHotspotInfos(hotspot) {
+      if (!this.hasHotspotItem) return
       this.loaded = true
       if (!this.isLight && hotspot.status.online !== 'offline') {
         this.blocksLeft =
@@ -147,9 +179,13 @@ export default {
     },
   },
 
-  created() {
-    this.getHotspotInfos(this.item)
+  watch: {
+    hasHotspotItem() {
+      this.getHotspotInfos(this.item)
+    },
   },
+  // created() {
+  // },
 }
 </script>
 

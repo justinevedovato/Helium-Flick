@@ -280,13 +280,9 @@ export default {
       if (response == 'failed' || data.payer !== longAP) {
         this.hotspot.status = data.status.online
         if (
-          data.status.listen_addrs &&
-          data.status.listen_addrs[0] &&
-          data.status.listen_addrs[0].includes('p2p')
+          data.status.height < store.lightBlock &&
+          data.status.online != 'offline'
         ) {
-          this.hotspot.relayed = true
-        }
-        if (data.status.height < 1350664 && data.status.online != 'offline') {
           this.hotspot.status = 'syncing'
         }
       }
