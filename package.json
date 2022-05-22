@@ -1,6 +1,6 @@
 {
   "name": "helium-flick",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Helium hotspot overview",
   "author": "JustineV",
   "main": "electron/electron.js",
