@@ -14,7 +14,7 @@
     </div>
 
     <div class="flex justify-between px-5 text-sm mb-1">
-      <div>
+      <div v-if="addresses.length">
         <select
           v-model="sortValue"
           class="flex border outline-none pb-0.5 border-gray-800 rounded bg-gray-900 pr-1"
